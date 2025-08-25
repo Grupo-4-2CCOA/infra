@@ -1,5 +1,5 @@
 # Grupo-4-2CCOA/infra
-Pasta para armazenar os códigos de Infraestrutura
+Pasta para armazenar os códigos de Infraestrutura.
 
 ## Diagramas
 Para visualizar os diagramas, é recomendado o uso da ferramenta `pipenv`, que isola seu ambiente de desenvolvimento e abstrai a criação desse ambiente.
@@ -20,8 +20,22 @@ Usando o `pipenv`, abra o **DIRETÓRIO DO REPOSITÓRIO** no terminal por meio do
 ```bash
 cd <caminho-para-o-diretorio-do-repositorio>
 ```
-Depois disso, use este comando para baixar as dependências e atualizar o diagrama
+Depois disso, use este comando para baixar as dependências e atualizar o diagrama:
 ```bash
 python -m pipenv install
 python -m pipenv run python diagrama.py
+```
+
+## Terraform
+**IMPORTANTE**: Não suba (ou tente subir) a pasta ".terraform" que é gerada pelo script `create.sh` ou pelo comando `terraform init`, mais especificamente, o arquivo de *"providers"* dentro dela.
+
+### Como criar a infraestrutura
+Para criar a infraestrutura do projeto, utilizando o código escrito para a ferramenta `terraform`, instale o terraform na sua máquina, abra o diretório `"/terraform"` no seu terminal e execute o seguinte comando:
+```bash
+. create.sh
+```
+### Como destruir a infraestrutura
+Para destruir a infraestrutura do projeto, com a infraestrutura já criada (**NECESSARIAMENTE PELO COMANDO TERRAFORM (ou pelo script acima)**), execute o seguinte comando:
+```bash
+. destroy.sh
 ```
