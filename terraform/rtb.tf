@@ -1,4 +1,4 @@
-resource "aws_route_table" "grupo4_route_table" {
+resource "aws_route_table" "grupo4_rtb" {
   vpc_id = aws_vpc.grupo4_vpc.id
 
   route {
@@ -7,6 +7,6 @@ resource "aws_route_table" "grupo4_route_table" {
   }
 
   tags = {
-    Name = "grupo4-route-table"
+    Name = "grupo4-rtb"
   }
 }
