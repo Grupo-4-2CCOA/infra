@@ -51,7 +51,7 @@ with Diagram("Arquitetura de Rede", show=False, node_attr=node_font_style, graph
 
       alb = ALB("ALB")
 
-      with Cluster("Availability Zone 1a"):
+      with Cluster("Availability Zone 1a", graph_attr=cluster_font_style):
         with Cluster("Subnet Pública (10.0.0.192/28 = 13 hosts)", graph_attr=cluster_font_style):
           with Cluster("Target Group", graph_attr=cluster_font_style):
             with Cluster("Frontend Server (10.0.0.195/28)", graph_attr=cluster_font_style):
@@ -79,7 +79,7 @@ with Diagram("Arquitetura de Rede", show=False, node_attr=node_font_style, graph
             sg_ec2_az1a_db = Custom("Security Group", "assets/securityGroup.png")
 
             sg_ec2_az1a_db >> Edge() << ec2_az1a_db >> Edge() << ebs_ec2_az1a_db
-      with Cluster("Availability Zone 1b"):
+      with Cluster("Availability Zone 1b", graph_attr=cluster_font_style):
         with Cluster("Subnet Pública (10.0.0.208/28 = 13 hosts)", graph_attr=cluster_font_style):
           with Cluster("Target Group", graph_attr=cluster_font_style):
             with Cluster("Frontend Server (10.0.0.211/28)", graph_attr=cluster_font_style):
