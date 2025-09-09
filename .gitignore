@@ -1,2 +1,6 @@
 .terraform/
+*.tfstate*
+*.terraform.lock*
 *.pem
+*.pub
+/diagrams/*.png
