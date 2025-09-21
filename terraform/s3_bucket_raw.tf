@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "raw" {
-  bucket = "BeautyBarreto-raw"
+  bucket = "beauty-barreto-raw"
   acl    = "private"
 }
 

@@ -11,6 +11,7 @@ resource "aws_instance" "grupo4_ec2_az1a_db" {
     aws_security_group.grupo4_sg_mysql.id
   ]
 
+
   ebs_block_device {
     device_name = "/dev/sda1"
     volume_type = "gp3"

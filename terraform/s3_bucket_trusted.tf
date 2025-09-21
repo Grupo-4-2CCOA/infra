@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "trusted" {
-  bucket = "BeautyBarreto-trusted"
+  bucket = "beauty-barreto-trusted"
   acl    = "private"
 }
 
