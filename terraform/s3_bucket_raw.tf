@@ -1,6 +1,5 @@
 resource "aws_s3_bucket" "raw" {
   bucket = "beauty-barreto-raw"
-  acl    = "private"
 }
 
 resource "aws_s3_bucket_versioning" "raw" {

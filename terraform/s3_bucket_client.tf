@@ -1,6 +1,5 @@
 resource "aws_s3_bucket" "client" {
   bucket = "beauty-barreto-client"
-  acl    = "private"
 }
 
 resource "aws_s3_bucket_versioning" "client" {

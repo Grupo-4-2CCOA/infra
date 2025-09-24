@@ -1,6 +1,7 @@
 resource "aws_instance" "grupo4_ec2_az1a_db" {
-  ami = "ami-0360c520857e3138f"
+  ami = var.ec2_ami
   instance_type = "t2.micro"
+  associate_public_ip_address = false
 
   key_name = aws_key_pair.grupo4_key_db.key_name
 
@@ -11,12 +12,13 @@ resource "aws_instance" "grupo4_ec2_az1a_db" {
     aws_security_group.grupo4_sg_mysql.id
   ]
 
-
   ebs_block_device {
     device_name = "/dev/sda1"
     volume_type = "gp3"
     volume_size = 24
   }
+
+  user_data = file("/files/shell/ec2_database.sh")
 
   tags = {
     Name = "grupo4-ec2-az1a-db"
