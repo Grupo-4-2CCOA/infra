@@ -1,5 +1,5 @@
 resource "aws_efs_file_system" "efs" {
-  creation_token = "BeautyBarreto-efs"
+  creation_token = "grupo4-efs"
   encrypted      = true
 }
 

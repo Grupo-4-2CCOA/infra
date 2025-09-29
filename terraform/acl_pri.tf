@@ -38,6 +38,14 @@ resource "aws_network_acl" "grupo4_acl_pri" {
     action = "allow"
   }
   ingress {
+    rule_no = "998"
+    protocol = "tcp"
+    from_port = 1024
+    to_port = 65535
+    cidr_block = "0.0.0.0/0"
+    action = "allow"
+  }
+  ingress {
     rule_no = "999"
     protocol = "-1"
     from_port = 0

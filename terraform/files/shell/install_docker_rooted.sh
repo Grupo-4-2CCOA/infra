@@ -1,9 +1,5 @@
 #!/bin/bash
-
-echo "Script iniciando";
-
 APP_USER="ubuntu";
-APP_DIR="/home/$APP_USER/main";
 
 # instalando docker:
 apt update && apt upgrade -y;
@@ -20,23 +16,3 @@ apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-co
 usermod -aG docker $APP_USER;
 
 apt update;
-# instalando o git:
-apt install git -y;
-
-# instalando o npm:
-apt install npm -y;
-
-# criando pasta main:
-mkdir -p "$APP_DIR";
-chown -R $APP_USER:$APP_USER "/home/$APP_USER";
-
-# executando os comandos iniciais do projeto (com o usuário ubuntu):
-sudo -u $APP_USER /bin/bash << EOF
-cd "$APP_DIR";
-# configurando o repositório:
-git clone https://github.com/Grupo-4-2CCOA/frontend.git;
-cd frontend;
-npm install;
-EOF
-
-echo "Script finalizado";

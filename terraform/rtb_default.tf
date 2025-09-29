@@ -7,6 +7,6 @@ resource "aws_default_route_table" "grupo4_default_rtb" {
   }
 
   tags = {
-    Name = "grupo4-default-rtb"
+    Name = "grupo4-rtb-default"
   }
 }
