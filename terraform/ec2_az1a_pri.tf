@@ -24,6 +24,18 @@ resource "aws_instance" "grupo4_ec2_az1a_pri_0" {
 
   user_data = file("/files/shell/ec2_pri.sh")
 
+  connection {
+        type = "ssh"
+        user = "ubuntu"
+        private_key = file("./labsuser.pem")
+        host = self.public_ip
+    }
+
+    provisioner "file" {
+      source = "files/scripts/compose.yaml"
+      destination = "/home/ubuntu/compose.yaml"
+    }
+
   tags = {
     Name = "grupo4-ec2-az1a-pri-0"
   }

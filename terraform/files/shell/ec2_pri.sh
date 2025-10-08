@@ -23,8 +23,18 @@ apt update;
 # instalando o git:
 apt install git -y;
 
+# instalando o java:
+apt install openjdk-11-jre -y;
+
 # criando pasta main:
 mkdir -p "$APP_DIR";
 chown -R $APP_USER:$APP_USER "/home/$APP_USER";
+
+# executando os comandos iniciais do projeto (com o usuário ubuntu):
+sudo -u $APP_USER /bin/bash << EOF
+cd "$APP_DIR";
+git clone https://github.com/Grupo-4-2CCOA/back-end.git;
+cd back-end;
+EOF
 
 echo "Script finalizado";
