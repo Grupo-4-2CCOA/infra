@@ -1,11 +1,42 @@
-sudo apt update -y
-curl -fsSL https://deb.nodesource.com/setup_22.11.0 | sudo -E bash -
-sudo apt install nodejs
-sudo apt install npm
+#!/bin/bash
 
-sudo apt install git
-git clone https://github.com/Grupo-4-2CCOA/frontend.git
+echo "Script iniciando";
 
-cd frontend
-npm install
-npm start
+APP_USER="ubuntu";
+APP_DIR="/home/$APP_USER/main";
+
+# instalando docker:
+apt update && apt upgrade -y;
+
+apt install ca-certificates curl -y;
+install -m 0755 -d /etc/apt/keyrings;
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc;
+chmod a+r /etc/apt/keyrings/docker.asc;
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(. /etc/os-release; echo "$VERSION_CODENAME") stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null;
+apt update;
+
+apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y;
+
+usermod -aG docker $APP_USER;
+
+apt update;
+# instalando o git:
+apt install git -y;
+
+# instalando o npm:
+apt install npm -y;
+
+# criando pasta main:
+mkdir -p "$APP_DIR";
+chown -R $APP_USER:$APP_USER "/home/$APP_USER";
+
+# executando os comandos iniciais do projeto (com o usuário ubuntu):
+sudo -u $APP_USER /bin/bash << EOF
+cd "$APP_DIR";
+git clone https://github.com/Grupo-4-2CCOA/frontend.git;
+cd frontend;
+npm install;
+npm run dev;
+EOF
+
+echo "Script finalizado";

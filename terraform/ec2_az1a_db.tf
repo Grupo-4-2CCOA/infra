@@ -16,6 +16,10 @@ resource "aws_instance" "grupo4_ec2_az1a_db" {
     device_name = "/dev/sda1"
     volume_type = "gp3"
     volume_size = 24
+
+    tags = {
+      Name = "grupo4-ebs-default-ec2-az1a-db"
+    }
   }
 
   user_data = file("/files/shell/ec2_database.sh")
@@ -23,4 +27,10 @@ resource "aws_instance" "grupo4_ec2_az1a_db" {
   tags = {
     Name = "grupo4-ec2-az1a-db"
   }
+}
+resource "aws_ec2_tag" "grupo4_ec2_az1a_db_eni_name" {
+  resource_id = aws_instance.grupo4_ec2_az1a_db.primary_network_interface_id
+
+  key = "Name"
+  value = "grupo4-eni-ec2-az1a-db"
 }

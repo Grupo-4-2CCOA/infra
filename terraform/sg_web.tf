@@ -17,6 +17,13 @@ resource "aws_security_group" "grupo4_sg_web" {
     cidr_blocks = ["0.0.0.0/0"]
     description = "HTTP:80"
   }
+  ingress {
+    protocol = "tcp"
+    from_port = 5173
+    to_port = 5173
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "HTTP:5173"
+  }
 
   egress {
     protocol = "-1"

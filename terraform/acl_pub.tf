@@ -14,6 +14,7 @@ resource "aws_network_acl" "grupo4_acl_pub" {
     cidr_block = "0.0.0.0/0"
     action = "allow"
   }
+
   ingress {
     rule_no = "110"
     protocol = "tcp"
@@ -22,11 +23,20 @@ resource "aws_network_acl" "grupo4_acl_pub" {
     cidr_block = "0.0.0.0/0"
     action = "allow"
   }
+  
   ingress {
     rule_no = "120"
     protocol = "tcp"
     from_port = 3333
     to_port = 3333
+    cidr_block = "0.0.0.0/0"
+    action = "allow"
+  }
+  ingress {
+    rule_no = "130"
+    protocol = "tcp"
+    from_port = 5173
+    to_port = 5173
     cidr_block = "0.0.0.0/0"
     action = "allow"
   }
@@ -47,11 +57,19 @@ resource "aws_network_acl" "grupo4_acl_pub" {
     action = "allow"
   }
   ingress {
-    rule_no = "998"
+    rule_no = "990"
     protocol = "-1"
     from_port = 0
     to_port = 0
     cidr_block = "10.1.0.32/28"
+    action = "allow"
+  }
+  ingress {
+    rule_no = "998"
+    protocol = "tcp"
+    from_port = 1024
+    to_port = 65535
+    cidr_block = "0.0.0.0/0"
     action = "allow"
   }
   ingress {
