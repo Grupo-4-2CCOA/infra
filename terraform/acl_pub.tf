@@ -14,6 +14,7 @@ resource "aws_network_acl" "grupo4_acl_pub" {
     cidr_block = "0.0.0.0/0"
     action = "allow"
   }
+
   ingress {
     rule_no = "110"
     protocol = "tcp"
@@ -22,11 +23,20 @@ resource "aws_network_acl" "grupo4_acl_pub" {
     cidr_block = "0.0.0.0/0"
     action = "allow"
   }
+  
   ingress {
     rule_no = "120"
     protocol = "tcp"
     from_port = 3333
     to_port = 3333
+    cidr_block = "0.0.0.0/0"
+    action = "allow"
+  }
+  ingress {
+    rule_no = "130"
+    protocol = "tcp"
+    from_port = 5173
+    to_port = 5173
     cidr_block = "0.0.0.0/0"
     action = "allow"
   }

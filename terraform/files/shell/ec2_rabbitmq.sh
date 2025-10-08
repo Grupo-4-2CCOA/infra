@@ -18,25 +18,22 @@ apt update;
 apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y;
 
 usermod -aG docker $APP_USER;
-
 apt update;
-# instalando o git:
-apt install git -y;
 
-# instalando o npm:
-apt install npm -y;
-
-# criando pasta main:
-mkdir -p "$APP_DIR";
-chown -R $APP_USER:$APP_USER "/home/$APP_USER";
-
-# executando os comandos iniciais do projeto (com o usuário ubuntu):
-sudo -u $APP_USER /bin/bash << EOF
-cd "$APP_DIR";
-git clone https://github.com/Grupo-4-2CCOA/frontend.git;
-cd frontend;
-npm install;
-npm run dev;
+cat <<EOF > docker-compose-rabbitmq.yaml
+version: '3.8'
+services:
+  rabbitmq:
+    image: 'rabbitmq:3.13-management'
+    environment:
+      - RABBITMQ_DEFAULT_USER=myuser
+      - RABBITMQ_DEFAULT_PASS=secret
+    ports:
+      - '5672:5672'
+      - '15672:15672'
 EOF
+
+# Subir RabbitMQ via Docker Compose
+sudo docker compose up;
 
 echo "Script finalizado";
