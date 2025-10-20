@@ -9,3 +9,15 @@ variable ec2_ami {
     type = string
     default = "ami-0360c520857e3138f"
 }
+
+variable elastic_ip_az1a_id {
+    description = "ID do IP Elastico da Instancia az1a"
+    type = string
+    default = "eipalloc-07e4c772c75184575"
+}
+
+variable elastic_ip_az1b_id {
+    description = "ID do IP Elastico da Instancia az1b"
+    type = string
+    default = "eipalloc-02272522139e48d68"
+}

@@ -9,7 +9,7 @@ resource "aws_instance" "grupo4_ec2_az1a_db" {
 
   vpc_security_group_ids = [
     aws_security_group.grupo4_sg_remote.id,
-    aws_security_group.grupo4_sg_mysql.id
+    aws_security_group.grupo4_sg_private.id
   ]
 
   ebs_block_device {
@@ -22,12 +22,13 @@ resource "aws_instance" "grupo4_ec2_az1a_db" {
     }
   }
 
-  user_data = file("/files/shell/ec2_database.sh")
+  # user_data = file("/files/shell/ec2_database.sh")
 
   tags = {
     Name = "grupo4-ec2-az1a-db"
   }
 }
+
 resource "aws_ec2_tag" "grupo4_ec2_az1a_db_eni_name" {
   resource_id = aws_instance.grupo4_ec2_az1a_db.primary_network_interface_id
 

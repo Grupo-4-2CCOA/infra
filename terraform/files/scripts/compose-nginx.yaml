@@ -1,0 +1,12 @@
+services:
+  web_server:
+    image: nginx:latest
+    container_name: frontend_beauty_barreto
+    
+    ports:
+      - "80:80"
+    
+    volumes:
+      - /home/ubuntu/frontend:/usr/share/nginx/html
+    
+    restart: unless-stopped

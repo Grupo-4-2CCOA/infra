@@ -22,12 +22,46 @@ resource "aws_instance" "grupo4_ec2_az1a_pub_0" {
     }
   }
 
-  user_data = file("/files/shell/ec2_pub.sh")
+  user_data = join("\n\n", [
+    "#!/bin/bash",
+    file("${path.module}/files/shell/installing_docker.sh"),
+    file("${path.module}/files/shell/installing_nginx.sh")
+  ])
+
+  connection {
+    type        = "ssh"
+    user        = "ubuntu"
+    private_key = tls_private_key.grupo4_key_pub.private_key_pem
+    host        = self.public_ip
+  }
+  
+  provisioner "file" {
+    source      = "files/scripts/compose-nginx.yaml"
+    destination = "/home/ubuntu/compose.yaml"
+  }
+
+  provisioner "file" {
+    content = tls_private_key.grupo4_key_pri.private_key_pem
+    destination = "/home/ubuntu/instance-key-rest.pem"
+  }
+
+  provisioner "file" {
+    content = tls_private_key.grupo4_key_db.private_key_pem
+    destination = "/home/ubuntu/instance-key-db.pem"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "chmod 400 /home/ubuntu/instance-key-rest.pem",
+      "chmod 400 /home/ubuntu/instance-key-db.pem"
+    ]
+  }
 
   tags = {
     Name = "grupo4-ec2-az1a-pub-0"
   }
 }
+
 resource "aws_ec2_tag" "grupo4_ec2_az1a_pub_0_eni_name" {
   resource_id = aws_instance.grupo4_ec2_az1a_pub_0.primary_network_interface_id
 

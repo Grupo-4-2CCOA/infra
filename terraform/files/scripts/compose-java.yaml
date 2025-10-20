@@ -1,0 +1,9 @@
+services:
+  api:
+    image: amazoncorretto:21 
+    container_name: api-spring 
+    command: sh -c "mkdir -p /usr/share/api && java -jar /usr/share/api/beauty_barreto.jar"
+    volumes:
+      - /usr/share/api:/usr/share/api  
+    ports:
+      - "8080:8080" 
