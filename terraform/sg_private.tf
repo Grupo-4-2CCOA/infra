@@ -1,7 +1,7 @@
 resource "aws_security_group" "grupo4_sg_private" {
   vpc_id = aws_vpc.grupo4_vpc.id
   name = "grupo4_sg_private"
-  description = "Permite trafego para MySQL e App"
+  description = "Permite trafego para MySQL e SSH"
 
   ingress {
     protocol        = "tcp"
@@ -25,6 +25,22 @@ resource "aws_security_group" "grupo4_sg_private" {
     to_port         = 3306
     security_groups = [aws_security_group.grupo4_sg_web.id]
     description     = "MySQL 3306"
+  }
+
+  ingress {
+    protocol        = "tcp"
+    from_port       = 5672
+    to_port         = 5672
+    security_groups = [aws_security_group.grupo4_sg_web.id]
+    description     = "RabbitMQ AMQP 5672"
+  }
+
+  ingress {
+    protocol        = "tcp"
+    from_port       = 15672
+    to_port         = 15672
+    security_groups = [aws_security_group.grupo4_sg_web.id]
+    description     = "RabbitMQ Management UI 15672"
   }
 
   egress {

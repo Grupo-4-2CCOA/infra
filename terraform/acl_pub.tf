@@ -3,7 +3,8 @@ resource "aws_network_acl" "grupo4_acl_pub" {
   
   subnet_ids = [
     aws_subnet.grupo4_subnet_az1a_pub.id,
-    aws_subnet.grupo4_subnet_az1b_pub.id
+    aws_subnet.grupo4_subnet_az1b_pub.id,
+    aws_subnet.grupo4_subnet_az1c_pub.id
   ]
 
   ingress {

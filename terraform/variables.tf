@@ -10,6 +10,12 @@ variable ec2_ami {
     default = "ami-0360c520857e3138f"
 }
 
+variable aws_user_id {
+    description = "Usuário AWS"
+    type = string
+    default = "376339220136"
+}
+
 variable elastic_ip_az1a_id {
     description = "ID do IP Elastico da Instancia az1a"
     type = string
@@ -20,4 +26,10 @@ variable elastic_ip_az1b_id {
     description = "ID do IP Elastico da Instancia az1b"
     type = string
     default = "eipalloc-02272522139e48d68"
+}
+
+variable elastic_ip_az1c_id {
+    description = "ID do IP Elastico da Instancia az1c"
+    type = string
+    default = "eipalloc-0e2f3e2ec099d1384"
 }

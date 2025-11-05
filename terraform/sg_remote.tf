@@ -10,12 +10,21 @@ resource "aws_security_group" "grupo4_sg_remote" {
     cidr_blocks = ["0.0.0.0/0"]
     description = "SSH:22"
   }
+
   ingress {
     protocol = "tcp"
     from_port = 3389
     to_port = 3389
     cidr_blocks = ["0.0.0.0/0"]
     description = "RDP:3389"
+  }
+
+  ingress {
+    protocol = "tcp"
+    from_port = 3000
+    to_port = 3000
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Grafana:3000"
   }
 
   egress {

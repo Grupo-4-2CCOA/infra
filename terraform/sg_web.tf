@@ -33,6 +33,22 @@ resource "aws_security_group" "grupo4_sg_web" {
     description = "ALL:-1"
   }
 
+  egress {
+    from_port   = 15672
+    to_port     = 15672
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Saida para RabbitMQ Management (15672)"
+  }
+
+  egress {
+    from_port   = 5672
+    to_port     = 5672
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Saida para RabbitMQ AMQP (5672)"
+  }
+
   tags = {
     Name = "grupo4-sg-web"
   }

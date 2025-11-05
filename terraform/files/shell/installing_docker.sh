@@ -3,7 +3,7 @@
 
 set -e
 
-echo "Iniciando a instalação do RabbitMQ no Ubuntu Linux..."
+echo "Iniciando a instalação do Docker no Ubuntu Linux..."
 
 # Atualizando a lista de pacotes
 sudo apt update

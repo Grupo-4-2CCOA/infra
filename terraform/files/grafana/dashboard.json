@@ -1,0 +1,2967 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 0,
+  "links": [],
+  "panels": [
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 28,
+      "panels": [
+        {
+          "datasource": {
+            "type": "grafana-athena-datasource",
+            "uid": "cf2xiw14y0ikgf"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "Quantidade",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "smooth",
+                "lineStyle": {
+                  "fill": "solid"
+                },
+                "lineWidth": 3,
+                "pointSize": 7,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "showValues": false,
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Ativos"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "yellow",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Concluídos"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "green",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Cancelados"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "red",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 11,
+            "w": 16,
+            "x": 0,
+            "y": 1
+          },
+          "id": 20,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "12.2.1",
+          "targets": [
+            {
+              "connectionArgs": {
+                "catalog": "__default",
+                "database": "__default",
+                "region": "__default",
+                "resultReuseEnabled": false,
+                "resultReuseMaxAgeInMinutes": 60
+              },
+              "format": 1,
+              "rawSQL": "WITH base AS (\r\n  SELECT\r\n    date_trunc(\r\n      'week',\r\n      COALESCE(\r\n        TRY(from_iso8601_timestamp(data_hora_agendamento)),\r\n        TRY(date_parse(data_hora_agendamento, '%d/%m/%Y %H:%i'))\r\n      )\r\n    ) AS semana,\r\n    UPPER(TRIM(status)) AS status\r\n  FROM bb_flattened\r\n  WHERE data_hora_agendamento IS NOT NULL\r\n    AND status IS NOT NULL\r\n)\r\nSELECT\r\n  semana AS data,\r\n  SUM(CASE WHEN status = 'ATIVO' THEN 1 ELSE 0 END) AS \"Ativos\",\r\n  SUM(CASE WHEN status = 'CONCLUÍDO' THEN 1 ELSE 0 END) AS \"Concluídos\",\r\n  SUM(CASE WHEN status = 'CANCELADO' THEN 1 ELSE 0 END) AS \"Cancelados\"\r\nFROM base\r\nGROUP BY semana\r\nORDER BY semana;\r\n",
+              "refId": "A"
+            }
+          ],
+          "title": "Agendamentos por Status",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "grafana-athena-datasource",
+            "uid": "cf2xiw14y0ikgf"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "m"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 11,
+            "w": 8,
+            "x": 16,
+            "y": 1
+          },
+          "id": 11,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "percentChangeColorMode": "standard",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "12.2.1",
+          "targets": [
+            {
+              "connectionArgs": {
+                "catalog": "__default",
+                "database": "__default",
+                "region": "__default",
+                "resultReuseEnabled": false,
+                "resultReuseMaxAgeInMinutes": 60
+              },
+              "format": 1,
+              "rawSQL": "SELECT\r\n  ROUND(AVG(CAST(duracao AS DOUBLE)), 2) AS duracao\r\nFROM bb_flattened\r\n",
+              "refId": "A"
+            }
+          ],
+          "title": "Duração Média do Serviço",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "grafana-athena-datasource",
+            "uid": "cf2xiw14y0ikgf"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "Percentual (%)",
+                "axisPlacement": "auto",
+                "fillOpacity": 80,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineWidth": 1,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "percentual_atrasos"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "semi-dark-orange",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 12,
+            "w": 19,
+            "x": 0,
+            "y": 66
+          },
+          "id": 12,
+          "options": {
+            "barRadius": 0,
+            "barWidth": 0.77,
+            "fullHighlight": false,
+            "groupWidth": 0.7,
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "orientation": "auto",
+            "showValue": "auto",
+            "stacking": "none",
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            },
+            "xTickLabelRotation": 0,
+            "xTickLabelSpacing": 0
+          },
+          "pluginVersion": "12.2.1",
+          "targets": [
+            {
+              "connectionArgs": {
+                "catalog": "__default",
+                "database": "__default",
+                "region": "__default",
+                "resultReuseEnabled": false,
+                "resultReuseMaxAgeInMinutes": 60
+              },
+              "format": 1,
+              "rawSQL": "WITH parsed AS (\r\n  SELECT\r\n    COALESCE(\r\n      TRY(from_iso8601_timestamp(data_hora_agendamento)),\r\n      TRY(date_parse(data_hora_agendamento, '%d/%m/%Y %H:%i')),\r\n      TRY(date_parse(data_hora_agendamento, '%d/%m/%Y'))\r\n    ) AS ts,\r\n    UPPER(TRIM(atraso)) AS atraso\r\n  FROM bb_flattened\r\n  WHERE data_hora_agendamento IS NOT NULL\r\n    AND data_hora_agendamento <> ''\r\n),\r\nbase AS (\r\n  SELECT date_trunc('month', ts) AS mes, atraso\r\n  FROM parsed\r\n  WHERE ts IS NOT NULL\r\n)\r\nSELECT\r\n  date_format(mes, '%Y-%m') AS mes_label,\r\n  ROUND(\r\n    100.0 * SUM(CASE WHEN atraso = 'SIM' THEN 1 ELSE 0 END) / COUNT(*)\r\n  , 2) AS \"Percentual de Atrasos\"\r\nFROM base\r\nGROUP BY mes\r\nORDER BY mes;\r\n",
+              "refId": "A"
+            }
+          ],
+          "title": "Percentual de Atrasos dos Clientes por Mês",
+          "type": "barchart"
+        },
+        {
+          "datasource": {
+            "type": "grafana-athena-datasource",
+            "uid": "cf2xiw14y0ikgf"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "percent"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 6,
+            "w": 5,
+            "x": 19,
+            "y": 66
+          },
+          "id": 21,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "percentChangeColorMode": "standard",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "text": {},
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "12.2.1",
+          "targets": [
+            {
+              "connectionArgs": {
+                "catalog": "__default",
+                "database": "__default",
+                "region": "__default",
+                "resultReuseEnabled": false,
+                "resultReuseMaxAgeInMinutes": 60
+              },
+              "format": 1,
+              "rawSQL": "SELECT\r\n  ROUND(\r\n    100.0 * SUM(CASE WHEN atraso = 'Sim' THEN 1 ELSE 0 END) / COUNT(*),\r\n    2\r\n  ) AS percentual_geral_atrasos\r\nFROM bb_flattened\r\nWHERE atraso IS NOT NULL;\r\n",
+              "refId": "A"
+            }
+          ],
+          "title": "Percentual de Atrasos dos Clientes",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "grafana-athena-datasource",
+            "uid": "cf2xiw14y0ikgf"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "m"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 6,
+            "w": 5,
+            "x": 19,
+            "y": 72
+          },
+          "id": 27,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "percentChangeColorMode": "standard",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "12.2.1",
+          "targets": [
+            {
+              "connectionArgs": {
+                "catalog": "__default",
+                "database": "__default",
+                "region": "__default",
+                "resultReuseEnabled": false,
+                "resultReuseMaxAgeInMinutes": 60
+              },
+              "format": 1,
+              "rawSQL": "SELECT\r\n  ROUND(AVG(CAST(tempo_atraso_minutos AS DOUBLE)), 2) AS tempo_medio_atraso_minutos\r\nFROM bb_flattened \r\nWHERE atraso = 'Sim';\r\n",
+              "refId": "A"
+            }
+          ],
+          "title": "Tempo Médio de Atraso dos Clientes",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "grafana-athena-datasource",
+            "uid": "cf2xiw14y0ikgf"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "Percentual (%)",
+                "axisPlacement": "auto",
+                "fillOpacity": 80,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineWidth": 1,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "percentual_atrasos"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "semi-dark-orange",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Percentual de Atrasos"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "red",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Percentual de Agendamentos Cancelados"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "blue",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 12,
+            "w": 19,
+            "x": 0,
+            "y": 78
+          },
+          "id": 29,
+          "options": {
+            "barRadius": 0,
+            "barWidth": 0.77,
+            "fullHighlight": false,
+            "groupWidth": 0.7,
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "orientation": "auto",
+            "showValue": "auto",
+            "stacking": "none",
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            },
+            "xTickLabelRotation": 0,
+            "xTickLabelSpacing": 0
+          },
+          "pluginVersion": "12.2.1",
+          "targets": [
+            {
+              "connectionArgs": {
+                "catalog": "__default",
+                "database": "__default",
+                "region": "__default",
+                "resultReuseEnabled": false,
+                "resultReuseMaxAgeInMinutes": 60
+              },
+              "format": 1,
+              "rawSQL": "WITH parsed AS (\r\n  SELECT\r\n    COALESCE(\r\n      TRY(from_iso8601_timestamp(data_hora_agendamento)),\r\n      TRY(date_parse(data_hora_agendamento, '%d/%m/%Y %H:%i')),\r\n      TRY(date_parse(data_hora_agendamento, '%d/%m/%Y'))\r\n    ) AS ts,\r\n    UPPER(TRIM(status)) AS status\r\n  FROM bb_flattened\r\n  WHERE data_hora_agendamento IS NOT NULL\r\n    AND data_hora_agendamento <> ''\r\n),\r\nbase AS (\r\n  SELECT date_trunc('month', ts) AS mes, status\r\n  FROM parsed\r\n  WHERE ts IS NOT NULL\r\n)\r\nSELECT\r\n  date_format(mes, '%Y-%m') AS mes_label,\r\n  ROUND(\r\n    100.0 * SUM(CASE WHEN status = 'CANCELADO' THEN 1 ELSE 0 END) / COUNT(*)\r\n  , 2) AS \"Percentual de Agendamentos Cancelados\"\r\nFROM base\r\nGROUP BY mes\r\nORDER BY mes;\r\n",
+              "refId": "A"
+            }
+          ],
+          "title": "Percentual de Agendamentos Cancelados por Mês",
+          "type": "barchart"
+        },
+        {
+          "datasource": {
+            "type": "grafana-athena-datasource",
+            "uid": "cf2xiw14y0ikgf"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "blue",
+                    "value": 0
+                  }
+                ]
+              },
+              "unit": "percent"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 12,
+            "w": 5,
+            "x": 19,
+            "y": 78
+          },
+          "id": 30,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "percentChangeColorMode": "standard",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "text": {},
+            "textMode": "auto",
+            "wideLayout": true
+          },
+          "pluginVersion": "12.2.1",
+          "targets": [
+            {
+              "connectionArgs": {
+                "catalog": "__default",
+                "database": "__default",
+                "region": "__default",
+                "resultReuseEnabled": false,
+                "resultReuseMaxAgeInMinutes": 60
+              },
+              "format": 1,
+              "rawSQL": "SELECT\r\n  ROUND(\r\n    100.0 * SUM(CASE WHEN status = 'Cancelado' THEN 1 ELSE 0 END) / COUNT(*),\r\n    2\r\n  ) AS percentual_geral_cancelado\r\nFROM bb_flattened\r\nWHERE status IS NOT NULL;\r\n",
+              "refId": "A"
+            }
+          ],
+          "title": "Percentual de Agendamentos Cancelados",
+          "type": "stat"
+        }
+      ],
+      "title": "Geral",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 1
+      },
+      "id": 4,
+      "panels": [
+        {
+          "datasource": {
+            "type": "grafana-athena-datasource",
+            "uid": "cf2xiw14y0ikgf"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "Percentual (%)",
+                "axisPlacement": "auto",
+                "fillOpacity": 80,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineWidth": 1,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "percentage",
+                "steps": [
+                  {
+                    "color": "#ff3678",
+                    "value": 0
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 9,
+            "w": 12,
+            "x": 0,
+            "y": 2
+          },
+          "id": 1,
+          "options": {
+            "barRadius": 0,
+            "barWidth": 0.56,
+            "colorByField": "tipo_clima",
+            "fullHighlight": false,
+            "groupWidth": 0.7,
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "orientation": "auto",
+            "showValue": "auto",
+            "stacking": "none",
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            },
+            "xField": "tipo_clima",
+            "xTickLabelRotation": 0,
+            "xTickLabelSpacing": 0
+          },
+          "pluginVersion": "12.2.1",
+          "targets": [
+            {
+              "connectionArgs": {
+                "catalog": "__default",
+                "database": "__default",
+                "region": "__default",
+                "resultReuseEnabled": false,
+                "resultReuseMaxAgeInMinutes": 60
+              },
+              "datasource": {
+                "type": "grafana-athena-datasource",
+                "uid": "cf2xiw14y0ikgf"
+              },
+              "format": 1,
+              "rawSQL": "WITH params AS (\r\n  SELECT\r\n    1.0  AS lim_chuva_mm,   -- precipitação ≥ 1.0 mm => Chuvoso\r\n    32.0 AS lim_calor_c,    -- temperatura ≥ 32 °C   => Calor extremo\r\n    10.0 AS lim_frio_c      -- temperatura ≤ 10 °C   => Frio extremo\r\n),\r\nparsed AS (\r\n  SELECT\r\n    COALESCE(\r\n      TRY(from_iso8601_timestamp(f.data_hora_agendamento)),         \r\n      TRY(date_parse(f.data_hora_agendamento, '%d/%m/%Y %H:%i')),\r\n      TRY(date_parse(f.data_hora_agendamento, '%Y-%m-%d %H:%i:%s')),\r\n      TRY(date_parse(f.data_hora_agendamento, '%Y-%m-%d'))\r\n    ) AS ts,\r\n    f.Precipitacao           AS precip_mm,\r\n    f.Temperatura            AS temp_c,\r\n    UPPER(f.status)          AS status_up\r\n  FROM bb_flattened f\r\n),\r\nbase AS (\r\n  SELECT\r\n    DATE(date_trunc('day', ts)) AS dt,\r\n    precip_mm,\r\n    temp_c,\r\n    status_up,\r\n    CASE\r\n      WHEN precip_mm >= p.lim_chuva_mm THEN 'Chuvoso'\r\n      WHEN temp_c   >= p.lim_calor_c   THEN 'Calor extremo'\r\n      WHEN temp_c   <= p.lim_frio_c    THEN 'Frio extremo'\r\n      ELSE 'Ensolarado'\r\n    END AS tipo_clima\r\n  FROM parsed\r\n  CROSS JOIN params p\r\n  WHERE ts IS NOT NULL\r\n),\r\nagg AS (\r\n  SELECT\r\n    tipo_clima,\r\n    COUNT(*) AS total_agend,\r\n    SUM(CASE WHEN status_up IN ('CANCELADO','CANCELADA') THEN 1 ELSE 0 END) AS cancelados\r\n  FROM base\r\n  GROUP BY tipo_clima\r\n)\r\nSELECT\r\n  tipo_clima,\r\n  ROUND(\r\n    (CAST(cancelados AS DOUBLE) / NULLIF(total_agend, 0)) * 100,\r\n    2\r\n  ) AS \"Percentual de Agendamentos Cancelados\"\r\nFROM agg\r\nORDER BY CASE tipo_clima\r\n  WHEN 'Chuvoso'       THEN 1\r\n  WHEN 'Calor extremo' THEN 2\r\n  WHEN 'Frio extremo'  THEN 3\r\n  ELSE 4\r\nEND;\r\n",
+              "refId": "A",
+              "table": "bb_flattened"
+            }
+          ],
+          "title": "Taxa de Agendamentos Cancelados em Relação ao Clima",
+          "type": "barchart"
+        },
+        {
+          "datasource": {
+            "type": "grafana-athena-datasource",
+            "uid": "cf2xiw14y0ikgf"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "Quantidade de Agendamentos",
+                "axisPlacement": "auto",
+                "fillOpacity": 80,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineWidth": 1,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Frio"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "super-light-blue",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Calor"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "red",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Ensolarado"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "yellow",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Chuvoso"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "dark-blue",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 9,
+            "w": 12,
+            "x": 12,
+            "y": 2
+          },
+          "id": 3,
+          "options": {
+            "barRadius": 0,
+            "barWidth": 0.97,
+            "colorByField": "condicao_climatica",
+            "fullHighlight": false,
+            "groupWidth": 0.7,
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "orientation": "auto",
+            "showValue": "auto",
+            "stacking": "none",
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            },
+            "xField": "servico",
+            "xTickLabelRotation": 0,
+            "xTickLabelSpacing": 0
+          },
+          "pluginVersion": "12.2.1",
+          "targets": [
+            {
+              "connectionArgs": {
+                "catalog": "__default",
+                "database": "__default",
+                "region": "__default",
+                "resultReuseEnabled": false,
+                "resultReuseMaxAgeInMinutes": 60
+              },
+              "format": 1,
+              "rawSQL": "WITH params AS (\r\n  SELECT\r\n    1.0  AS lim_chuva_mm,\r\n    34.0 AS lim_calor_c,\r\n    10.0 AS lim_frio_c\r\n),\r\nparsed AS (\r\n  SELECT\r\n    COALESCE(\r\n      TRY(from_iso8601_timestamp(f.data_hora_agendamento)),\r\n      TRY(date_parse(f.data_hora_agendamento, '%d/%m/%Y %H:%i')),\r\n      TRY(date_parse(f.data_hora_agendamento, '%Y-%m-%d %H:%i:%s')),\r\n      TRY(date_parse(f.data_hora_agendamento, '%Y-%m-%d'))\r\n    ) AS ts,\r\n    CAST(f.Precipitacao AS DOUBLE) AS precip_mm,\r\n    CAST(f.Temperatura  AS DOUBLE) AS temp_c,\r\n    NULLIF(TRIM(f.servico), '')     AS servico\r\n  FROM bb_flattened f\r\n),\r\nclassif AS (\r\n  SELECT\r\n    servico,\r\n    CASE\r\n      WHEN precip_mm >= p.lim_chuva_mm THEN 'Chuvoso'\r\n      WHEN temp_c   >= p.lim_calor_c   THEN 'Calor'\r\n      WHEN temp_c   <= p.lim_frio_c    THEN 'Frio'\r\n      ELSE 'Ensolarado'\r\n    END AS tipo_clima\r\n  FROM parsed\r\n  CROSS JOIN params p\r\n  WHERE ts IS NOT NULL\r\n    AND servico IS NOT NULL\r\n),\r\nagg AS (\r\n  SELECT\r\n    servico,\r\n    SUM(CASE WHEN tipo_clima = 'Chuvoso'    THEN 1 ELSE 0 END) AS chuvoso,\r\n    SUM(CASE WHEN tipo_clima = 'Calor'      THEN 1 ELSE 0 END) AS calor,\r\n    SUM(CASE WHEN tipo_clima = 'Frio'       THEN 1 ELSE 0 END) AS frio,\r\n    SUM(CASE WHEN tipo_clima = 'Ensolarado' THEN 1 ELSE 0 END) AS ensolarado\r\n  FROM classif\r\n  GROUP BY servico\r\n)\r\nSELECT\r\n  servico,\r\n  ensolarado AS \"Ensolarado\",\r\n  chuvoso AS \"Chuvoso\",\r\n  calor AS \"Calor (>= 34°C)\",\r\n  frio AS \"Frio (<= 10°C)\"\r\nFROM agg\r\nORDER BY (chuvoso + calor + frio + ensolarado) DESC;\r\n",
+              "refId": "A",
+              "table": "bb_flattened"
+            }
+          ],
+          "title": "Serviços Utilizados por Tipo de Clima",
+          "type": "barchart"
+        },
+        {
+          "datasource": {
+            "type": "grafana-athena-datasource",
+            "uid": "cf2xiw14y0ikgf"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "Taxa de Cancelamento (%)",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "smooth",
+                "lineStyle": {
+                  "fill": "solid"
+                },
+                "lineWidth": 2,
+                "pointSize": 10,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "showValues": true,
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "#ca9534",
+                    "value": 0
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Temperatura Mínima (°C)"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "blue",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Temperatura Máxima (°C)"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "orange",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Temperatura Média (°C)"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "semi-dark-green",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 9,
+            "w": 12,
+            "x": 0,
+            "y": 38
+          },
+          "id": 26,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "12.2.1",
+          "targets": [
+            {
+              "connectionArgs": {
+                "catalog": "__default",
+                "database": "__default",
+                "region": "__default",
+                "resultReuseEnabled": false,
+                "resultReuseMaxAgeInMinutes": 60
+              },
+              "format": 1,
+              "rawSQL": "WITH parsed AS (\r\n  SELECT\r\n    COALESCE(\r\n      TRY(from_iso8601_timestamp(f.data_hora_agendamento)),\r\n      TRY(date_parse(f.data_hora_agendamento, '%d/%m/%Y %H:%i'))\r\n    ) AS ts,\r\n    TRIM(f.status) AS status_up\r\n  FROM bb_flattened f\r\n  WHERE f.status IS NOT NULL\r\n),\r\nbase AS (\r\n  SELECT\r\n    date_trunc('month', ts) AS mes,\r\n    date_format(date_trunc('month', ts), '%Y-%m') AS mes_label,\r\n    status_up\r\n  FROM parsed\r\n  WHERE ts IS NOT NULL\r\n),\r\nagg AS (\r\n  SELECT\r\n    mes,\r\n    mes_label,\r\n    COUNT(*) AS total_agend,\r\n    SUM(CASE WHEN status_up = 'Cancelado' THEN 1 ELSE 0 END) AS cancelados\r\n  FROM base\r\n  GROUP BY mes, mes_label\r\n)\r\nSELECT\r\n  mes AS time,\r\n  ROUND((CAST(cancelados AS DOUBLE) / NULLIF(total_agend, 0)) * 100, 2) AS \"Percentual de Agendamentos Cancelados\"\r\nFROM agg\r\nORDER BY mes;\r\n",
+              "refId": "A"
+            }
+          ],
+          "title": "Variação da Taxa de Cancelamentos ao Longo do Tempo",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "grafana-athena-datasource",
+            "uid": "cf2xiw14y0ikgf"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "Temperatura (°C)",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "smooth",
+                "lineStyle": {
+                  "fill": "solid"
+                },
+                "lineWidth": 2,
+                "pointSize": 10,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "showValues": false,
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "#ca9534",
+                    "value": 0
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Temperatura Mínima (°C)"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "blue",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Temperatura Máxima (°C)"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "orange",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Temperatura Média (°C)"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "semi-dark-green",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 9,
+            "w": 12,
+            "x": 12,
+            "y": 38
+          },
+          "id": 9,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "12.2.1",
+          "targets": [
+            {
+              "connectionArgs": {
+                "catalog": "__default",
+                "database": "__default",
+                "region": "__default",
+                "resultReuseEnabled": false,
+                "resultReuseMaxAgeInMinutes": 60
+              },
+              "format": 1,
+              "rawSQL": "WITH parsed AS (\r\n  SELECT\r\n    COALESCE(\r\n      TRY(from_iso8601_timestamp(f.data_hora_agendamento)),\r\n      TRY(date_parse(f.data_hora_agendamento, '%d/%m/%Y %H:%i'))\r\n    ) AS ts,\r\n    CAST(f.Temperatura AS DOUBLE) AS temp_c\r\n  FROM bb_flattened f\r\n  WHERE f.Temperatura IS NOT NULL\r\n),\r\nagg AS (\r\n  SELECT\r\n    date_trunc('month', ts) AS periodo,\r\n    AVG(temp_c) AS temp_media,\r\n    MIN(temp_c) AS temp_min,\r\n    MAX(temp_c) AS temp_max\r\n  FROM parsed\r\n  WHERE ts IS NOT NULL\r\n  GROUP BY 1\r\n)\r\nSELECT\r\n  periodo AS time,\r\n  ROUND(temp_media, 2) AS \"Temperatura Média (°C)\",\r\n  ROUND(temp_min,   2) AS \"Temperatura Mínima (°C)\",\r\n  ROUND(temp_max,   2) AS \"Temperatura Máxima (°C)\"\r\nFROM agg\r\nORDER BY time;\r\n",
+              "refId": "A"
+            }
+          ],
+          "title": "Variação de Temperatura ao Longo do Tempo",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "grafana-athena-datasource",
+            "uid": "cf2xiw14y0ikgf"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                }
+              },
+              "fieldMinMax": false,
+              "mappings": []
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Pedicure"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "orange",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Hidratação"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "blue",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Cabelo"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "green",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Manicure"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "yellow",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 9,
+            "w": 6,
+            "x": 0,
+            "y": 47
+          },
+          "id": 17,
+          "options": {
+            "displayLabels": [
+              "percent",
+              "name"
+            ],
+            "legend": {
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "pieType": "donut",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "limit": 10,
+              "values": true
+            },
+            "sort": "desc",
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "12.2.1",
+          "targets": [
+            {
+              "connectionArgs": {
+                "catalog": "__default",
+                "database": "__default",
+                "region": "__default",
+                "resultReuseEnabled": false,
+                "resultReuseMaxAgeInMinutes": 60
+              },
+              "format": 1,
+              "rawSQL": "WITH base AS (\r\n  SELECT\r\n    NULLIF(TRIM(f.servico), '') AS servico,\r\n    TRY_CAST(f.temperatura AS DOUBLE)  AS temperatura,\r\n    TRY_CAST(f.precipitacao AS DOUBLE) AS precipitacao\r\n  FROM bb_flattened f\r\n  WHERE f.servico IS NOT NULL\r\n)\r\nSELECT\r\n  servico,\r\n  ROUND(100.0 * COUNT(*) / SUM(COUNT(*)) OVER (), 2) AS percentual_servico\r\nFROM base\r\nWHERE servico IS NOT NULL\r\n  AND temperatura BETWEEN 10 AND 33\r\n  AND precipitacao < 1\r\nGROUP BY servico\r\nORDER BY percentual_servico DESC;\r\n",
+              "refId": "A"
+            }
+          ],
+          "title": "Serviços Consultados em Dias de Tempo Estável",
+          "type": "piechart"
+        },
+        {
+          "datasource": {
+            "type": "grafana-athena-datasource",
+            "uid": "cf2xiw14y0ikgf"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                }
+              },
+              "mappings": []
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 9,
+            "w": 6,
+            "x": 6,
+            "y": 47
+          },
+          "id": 15,
+          "options": {
+            "displayLabels": [
+              "percent",
+              "name"
+            ],
+            "legend": {
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "pieType": "donut",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": true
+            },
+            "sort": "desc",
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "12.2.1",
+          "targets": [
+            {
+              "connectionArgs": {
+                "catalog": "__default",
+                "database": "__default",
+                "region": "__default",
+                "resultReuseEnabled": false,
+                "resultReuseMaxAgeInMinutes": 60
+              },
+              "format": 1,
+              "rawSQL": "WITH base AS (\r\n  SELECT\r\n    NULLIF(TRIM(f.servico), '') AS servico,\r\n    TRY_CAST(f.temperatura AS DOUBLE)  AS temperatura,\r\n    TRY_CAST(f.precipitacao AS DOUBLE) AS precipitacao\r\n  FROM bb_flattened f\r\n  WHERE f.servico IS NOT NULL\r\n)\r\nSELECT\r\n  servico,\r\n  ROUND(100.0 * COUNT(*) / SUM(COUNT(*)) OVER (), 2) AS percentual_servico\r\nFROM base\r\nWHERE servico IS NOT NULL\r\n  AND temperatura >= 33\r\nGROUP BY servico\r\nORDER BY percentual_servico DESC;\r\n",
+              "refId": "A"
+            }
+          ],
+          "title": "Serviços Consultados em Clima Quente (>32°C)",
+          "type": "piechart"
+        },
+        {
+          "datasource": {
+            "type": "grafana-athena-datasource",
+            "uid": "cf2xiw14y0ikgf"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                }
+              },
+              "mappings": []
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Manicure"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "yellow",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Cabelo"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "green",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 9,
+            "w": 6,
+            "x": 12,
+            "y": 47
+          },
+          "id": 16,
+          "options": {
+            "displayLabels": [
+              "name",
+              "percent"
+            ],
+            "legend": {
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "pieType": "donut",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": true
+            },
+            "sort": "desc",
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "12.2.1",
+          "targets": [
+            {
+              "connectionArgs": {
+                "catalog": "__default",
+                "database": "__default",
+                "region": "__default",
+                "resultReuseEnabled": false,
+                "resultReuseMaxAgeInMinutes": 60
+              },
+              "format": 1,
+              "rawSQL": "WITH base AS (\r\n  SELECT\r\n    NULLIF(TRIM(f.servico), '') AS servico,\r\n    TRY_CAST(f.temperatura AS DOUBLE)  AS temperatura,\r\n    TRY_CAST(f.precipitacao AS DOUBLE) AS precipitacao\r\n  FROM bb_flattened f\r\n  WHERE f.servico IS NOT NULL\r\n)\r\nSELECT\r\n  servico,\r\n  ROUND(100.0 * COUNT(*) / SUM(COUNT(*)) OVER (), 2) AS percentual_servico\r\nFROM base\r\nWHERE servico IS NOT NULL\r\n  AND temperatura <= 10\r\nGROUP BY servico\r\nORDER BY percentual_servico DESC;",
+              "refId": "A"
+            }
+          ],
+          "title": "Serviços Consultados em Clima Frio (<11°C)",
+          "type": "piechart"
+        },
+        {
+          "datasource": {
+            "type": "grafana-athena-datasource",
+            "uid": "cf2xiw14y0ikgf"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                }
+              },
+              "mappings": []
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Cabelo"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "green",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Manicure"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "yellow",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 9,
+            "w": 6,
+            "x": 18,
+            "y": 47
+          },
+          "id": 14,
+          "options": {
+            "displayLabels": [
+              "name",
+              "percent"
+            ],
+            "legend": {
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "pieType": "donut",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": true
+            },
+            "sort": "desc",
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "12.2.1",
+          "targets": [
+            {
+              "connectionArgs": {
+                "catalog": "__default",
+                "database": "__default",
+                "region": "__default",
+                "resultReuseEnabled": false,
+                "resultReuseMaxAgeInMinutes": 60
+              },
+              "format": 1,
+              "rawSQL": "WITH base AS (\r\n  SELECT\r\n    NULLIF(TRIM(f.servico), '') AS servico,\r\n    TRY_CAST(f.temperatura AS DOUBLE)  AS temperatura,\r\n    TRY_CAST(f.precipitacao AS DOUBLE) AS precipitacao\r\n  FROM bb_flattened f\r\n  WHERE f.servico IS NOT NULL\r\n)\r\nSELECT\r\n  servico,\r\n  ROUND(100.0 * COUNT(*) / SUM(COUNT(*)) OVER (), 2) AS percentual_servico\r\nFROM base\r\nWHERE servico IS NOT NULL\r\n  AND precipitacao >= 1\r\nGROUP BY servico\r\nORDER BY percentual_servico DESC;\r\n",
+              "refId": "A"
+            }
+          ],
+          "title": "Serviços Consultados em Dias de Chuva (>1 mm)",
+          "type": "piechart"
+        }
+      ],
+      "title": "Clima/Tempo",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 2
+      },
+      "id": 5,
+      "panels": [
+        {
+          "datasource": {
+            "type": "grafana-athena-datasource",
+            "uid": "cf2xiw14y0ikgf"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "Percentual (%)",
+                "axisPlacement": "auto",
+                "fillOpacity": 80,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineWidth": 1,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "#ca9534",
+                    "value": 0
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Percentual Agendamentos de Cancelamentos"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "red",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 9,
+            "w": 12,
+            "x": 0,
+            "y": 3
+          },
+          "id": 2,
+          "options": {
+            "barRadius": 0,
+            "barWidth": 0.52,
+            "fullHighlight": false,
+            "groupWidth": 0.7,
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "orientation": "auto",
+            "showValue": "auto",
+            "stacking": "none",
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            },
+            "xTickLabelRotation": 0,
+            "xTickLabelSpacing": 0
+          },
+          "pluginVersion": "12.2.1",
+          "targets": [
+            {
+              "connectionArgs": {
+                "catalog": "__default",
+                "database": "__default",
+                "region": "__default",
+                "resultReuseEnabled": false,
+                "resultReuseMaxAgeInMinutes": 60
+              },
+              "format": 1,
+              "rawSQL": "WITH parsed AS (\r\n  SELECT\r\n    COALESCE(\r\n      TRY(from_iso8601_timestamp(f.data_hora_agendamento)),\r\n      TRY(date_parse(f.data_hora_agendamento, '%d/%m/%Y %H:%i')),\r\n      TRY(date_parse(f.data_hora_agendamento, '%Y-%m-%d %H:%i:%s')),\r\n      TRY(date_parse(f.data_hora_agendamento, '%Y-%m-%d'))\r\n    ) AS ts,\r\n    UPPER(f.status) AS status_up,\r\n    f.feriado\r\n  FROM bb_flattened f\r\n  WHERE f.status IS NOT NULL\r\n),\r\nbase AS (\r\n  SELECT\r\n    DATE(date_trunc('day', ts)) AS data_agendamento,\r\n    status_up,\r\n    feriado\r\n  FROM parsed\r\n  WHERE ts IS NOT NULL\r\n),\r\nferiados AS (\r\n  SELECT DISTINCT data_agendamento AS data_feriado\r\n  FROM base\r\n  WHERE feriado = 'Sim'\r\n),\r\nclassificado AS (\r\n  SELECT\r\n    b.data_agendamento,\r\n    b.status_up,\r\n    CASE\r\n      WHEN b.feriado = 'Sim' THEN 'Feriado'\r\n      WHEN DATE_ADD('day', 1, b.data_agendamento) IN (SELECT data_feriado FROM feriados)\r\n           THEN 'Véspera de feriado'\r\n      ELSE 'Dia útil'\r\n    END AS tipo_dia\r\n  FROM base b\r\n),\r\nagg AS (\r\n  SELECT\r\n    tipo_dia,\r\n    COUNT(*) AS total_agend,\r\n    SUM(CASE WHEN status_up IN ('CANCELADO','CANCELADA') THEN 1 ELSE 0 END) AS cancelados\r\n  FROM classificado\r\n  GROUP BY tipo_dia\r\n)\r\nSELECT\r\n  tipo_dia,\r\n  ROUND((CAST(cancelados AS DOUBLE) / NULLIF(total_agend, 0)) * 100, 2)\r\n    AS \"Percentual Agendamentos de Cancelamentos\"\r\nFROM agg\r\nORDER BY CASE tipo_dia\r\n  WHEN 'Feriado' THEN 1\r\n  WHEN 'Véspera de feriado' THEN 2\r\n  WHEN 'Dia útil' THEN 3\r\n  ELSE 4\r\nEND;\r\n",
+              "refId": "A"
+            }
+          ],
+          "title": "Taxa de Agendamentos Cancelados em Relação aos Feriados",
+          "type": "barchart"
+        },
+        {
+          "datasource": {
+            "type": "grafana-athena-datasource",
+            "uid": "cf2xiw14y0ikgf"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "Percentual (%)",
+                "axisPlacement": "auto",
+                "fillOpacity": 80,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineWidth": 1,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "#ca9534",
+                    "value": 0
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Percentual de Agendamento Cancelados"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "semi-dark-purple",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 9,
+            "w": 12,
+            "x": 12,
+            "y": 3
+          },
+          "id": 7,
+          "options": {
+            "barRadius": 0,
+            "barWidth": 0.52,
+            "fullHighlight": false,
+            "groupWidth": 0.7,
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "orientation": "auto",
+            "showValue": "auto",
+            "stacking": "none",
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            },
+            "xTickLabelRotation": 0,
+            "xTickLabelSpacing": 0
+          },
+          "pluginVersion": "12.2.1",
+          "targets": [
+            {
+              "connectionArgs": {
+                "catalog": "__default",
+                "database": "__default",
+                "region": "__default",
+                "resultReuseEnabled": false,
+                "resultReuseMaxAgeInMinutes": 60
+              },
+              "format": 1,
+              "rawSQL": "WITH parsed AS (\r\n  SELECT\r\n    COALESCE(\r\n      TRY(from_iso8601_timestamp(f.data_hora_agendamento)),\r\n      TRY(date_parse(f.data_hora_agendamento, '%d/%m/%Y %H:%i'))\r\n    ) AS ts,\r\n    TRIM(f.status) AS status_up\r\n  FROM bb_flattened f\r\n  WHERE f.status IS NOT NULL\r\n),\r\nbase AS (\r\n  SELECT\r\n    day_of_week(ts) AS dia_semana_num,\r\n    status_up\r\n  FROM parsed\r\n  WHERE ts IS NOT NULL AND day_of_week(ts) <> 7\r\n),\r\nagg AS (\r\n  SELECT\r\n    dia_semana_num,\r\n    COUNT(*) AS total_agend,\r\n    SUM(CASE WHEN status_up = 'Cancelado' THEN 1 ELSE 0 END) AS cancelados\r\n  FROM base\r\n  GROUP BY dia_semana_num\r\n)\r\nSELECT\r\n  CASE dia_semana_num\r\n    WHEN 1 THEN 'Segunda-feira'\r\n    WHEN 2 THEN 'Terça-feira'\r\n    WHEN 3 THEN 'Quarta-feira'\r\n    WHEN 4 THEN 'Quinta-feira'\r\n    WHEN 5 THEN 'Sexta-feira'\r\n    WHEN 6 THEN 'Sábado'\r\n  END AS dia_semana,\r\n  ROUND((CAST(cancelados AS DOUBLE) / NULLIF(total_agend, 0)) * 100, 2) AS \"Percentual de Agendamento Cancelados\"\r\nFROM agg\r\nORDER BY dia_semana_num;\r\n",
+              "refId": "A"
+            }
+          ],
+          "title": "Taxa de Agendamentos Cancelados em Relação ao Dias da Semana",
+          "type": "barchart"
+        },
+        {
+          "datasource": {
+            "type": "grafana-athena-datasource",
+            "uid": "cf2xiw14y0ikgf"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "Quantidade",
+                "axisPlacement": "auto",
+                "fillOpacity": 80,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineWidth": 1,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Hidratação"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "light-red",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Manicure"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "purple",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Cabelo"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "orange",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Pedicure"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "blue",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "__systemRef": "hideSeriesFrom",
+                "matcher": {
+                  "id": "byNames",
+                  "options": {
+                    "mode": "exclude",
+                    "names": [
+                      "total_atrasos",
+                      "percentual",
+                      "Dias comuns percentual"
+                    ],
+                    "prefix": "All except:",
+                    "readOnly": true
+                  }
+                },
+                "properties": []
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 9,
+            "w": 12,
+            "x": 0,
+            "y": 12
+          },
+          "id": 18,
+          "options": {
+            "barRadius": 0,
+            "barWidth": 0.97,
+            "fullHighlight": false,
+            "groupWidth": 0.7,
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "orientation": "auto",
+            "showValue": "auto",
+            "stacking": "none",
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            },
+            "xTickLabelRotation": 0,
+            "xTickLabelSpacing": 0
+          },
+          "pluginVersion": "12.2.1",
+          "targets": [
+            {
+              "connectionArgs": {
+                "catalog": "__default",
+                "database": "__default",
+                "region": "__default",
+                "resultReuseEnabled": false,
+                "resultReuseMaxAgeInMinutes": 60
+              },
+              "format": 1,
+              "rawSQL": "WITH base AS (\r\n  SELECT\r\n    CASE \r\n      WHEN LOWER(TRIM(feriado)) = 'sim' THEN 'Feriados'\r\n      ELSE 'Dias comuns'\r\n    END AS grupo,\r\n    CASE \r\n      WHEN LOWER(TRIM(atraso)) = 'sim' THEN 'Atrasos'\r\n      ELSE 'Não atrasos'\r\n    END AS tipo_atraso\r\n  FROM bb_flattened\r\n  WHERE feriado IS NOT NULL\r\n    AND atraso IS NOT NULL\r\n)\r\nSELECT\r\n  grupo,\r\n  SUM(CASE WHEN tipo_atraso = 'Atrasos' THEN 1 ELSE 0 END) AS \"Com Atrasos\",\r\n  SUM(CASE WHEN tipo_atraso = 'Não atrasos' THEN 1 ELSE 0 END) AS \"Sem Atrasos\"\r\nFROM base\r\nGROUP BY grupo\r\nORDER BY CASE grupo WHEN 'Feriados' THEN 1 ELSE 2 END;\r\n",
+              "refId": "A"
+            }
+          ],
+          "title": "Agendamentos com Atrasos",
+          "type": "barchart"
+        },
+        {
+          "datasource": {
+            "type": "grafana-athena-datasource",
+            "uid": "cf2xiw14y0ikgf"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                }
+              },
+              "mappings": []
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Hidratação"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "light-red",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Manicure"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "purple",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Cabelo"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "orange",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "__systemRef": "hideSeriesFrom",
+                "matcher": {
+                  "id": "byNames",
+                  "options": {
+                    "mode": "exclude",
+                    "names": [
+                      "percentual"
+                    ],
+                    "prefix": "All except:",
+                    "readOnly": true
+                  }
+                },
+                "properties": [
+                  {
+                    "id": "custom.hideFrom",
+                    "value": {
+                      "legend": false,
+                      "tooltip": true,
+                      "viz": true
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Pedicure"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "blue",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Não"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "yellow",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Sim"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "super-light-red",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Atrasos"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "semi-dark-red",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Sem atrasos"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "semi-dark-blue",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 9,
+            "w": 6,
+            "x": 12,
+            "y": 12
+          },
+          "id": 23,
+          "options": {
+            "displayLabels": [
+              "name",
+              "percent"
+            ],
+            "legend": {
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "pieType": "donut",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": true
+            },
+            "sort": "desc",
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "12.2.1",
+          "targets": [
+            {
+              "connectionArgs": {
+                "catalog": "__default",
+                "database": "__default",
+                "region": "__default",
+                "resultReuseEnabled": false,
+                "resultReuseMaxAgeInMinutes": 60
+              },
+              "format": 1,
+              "rawSQL": "SELECT\r\n  CASE \r\n    WHEN atraso = 'Sim' THEN 'Atrasos'\r\n    ELSE 'Sem atrasos'\r\n  END AS tipo_atraso,\r\n  ROUND(100.0 * COUNT(*) / SUM(COUNT(*)) OVER (), 2) AS percentual\r\nFROM bb_flattened\r\nWHERE feriado = 'Sim'\r\nGROUP BY 1\r\nORDER BY percentual DESC;\r\n",
+              "refId": "A"
+            }
+          ],
+          "title": "Percentual de Atrasos nos Feriados",
+          "type": "piechart"
+        },
+        {
+          "datasource": {
+            "type": "grafana-athena-datasource",
+            "uid": "cf2xiw14y0ikgf"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                }
+              },
+              "mappings": []
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Hidratação"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "light-red",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Manicure"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "purple",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Cabelo"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "orange",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "__systemRef": "hideSeriesFrom",
+                "matcher": {
+                  "id": "byNames",
+                  "options": {
+                    "mode": "exclude",
+                    "names": [
+                      "percentual"
+                    ],
+                    "prefix": "All except:",
+                    "readOnly": true
+                  }
+                },
+                "properties": [
+                  {
+                    "id": "custom.hideFrom",
+                    "value": {
+                      "legend": false,
+                      "tooltip": true,
+                      "viz": true
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Pedicure"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "blue",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Não"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "yellow",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Sim"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "super-light-red",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Atrasos"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "semi-dark-red",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Sem atrasos"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "semi-dark-blue",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 9,
+            "w": 6,
+            "x": 18,
+            "y": 12
+          },
+          "id": 24,
+          "options": {
+            "displayLabels": [
+              "name",
+              "percent"
+            ],
+            "legend": {
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "pieType": "donut",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": true
+            },
+            "sort": "desc",
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "12.2.1",
+          "targets": [
+            {
+              "connectionArgs": {
+                "catalog": "__default",
+                "database": "__default",
+                "region": "__default",
+                "resultReuseEnabled": false,
+                "resultReuseMaxAgeInMinutes": 60
+              },
+              "format": 1,
+              "rawSQL": "SELECT\r\n  CASE \r\n    WHEN atraso = 'Sim' THEN 'Atrasos'\r\n    ELSE 'Sem atrasos'\r\n  END AS tipo_atraso,\r\n  ROUND(100.0 * COUNT(*) / SUM(COUNT(*)) OVER (), 2) AS percentual\r\nFROM bb_flattened\r\nWHERE feriado = 'Não'\r\nGROUP BY 1\r\nORDER BY percentual DESC;\r\n",
+              "refId": "A"
+            }
+          ],
+          "title": "Percentual de Atrasos nos Dias Letivos",
+          "type": "piechart"
+        },
+        {
+          "datasource": {
+            "type": "grafana-athena-datasource",
+            "uid": "cf2xiw14y0ikgf"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "Percentual (%)",
+                "axisPlacement": "auto",
+                "fillOpacity": 80,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineWidth": 1,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Não cancelados (%)"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "light-yellow",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Cancelados (%)"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "light-red",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 9,
+            "w": 12,
+            "x": 0,
+            "y": 21
+          },
+          "id": 13,
+          "options": {
+            "barRadius": 0,
+            "barWidth": 0.97,
+            "fullHighlight": false,
+            "groupWidth": 0.7,
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "orientation": "auto",
+            "showValue": "auto",
+            "stacking": "none",
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            },
+            "xTickLabelRotation": 0,
+            "xTickLabelSpacing": 0
+          },
+          "pluginVersion": "12.2.1",
+          "targets": [
+            {
+              "connectionArgs": {
+                "catalog": "__default",
+                "database": "__default",
+                "region": "__default",
+                "resultReuseEnabled": false,
+                "resultReuseMaxAgeInMinutes": 60
+              },
+              "format": 1,
+              "rawSQL": "WITH parsed AS (\r\n  SELECT\r\n    COALESCE(\r\n      TRY(from_iso8601_timestamp(f.data_hora_agendamento)),\r\n      TRY(date_parse(f.data_hora_agendamento, '%d/%m/%Y %H:%i'))\r\n    ) AS ts,\r\n    TRIM(f.status) AS status_up\r\n  FROM bb_flattened f\r\n  WHERE f.data_hora_agendamento IS NOT NULL\r\n),\r\nbase AS (\r\n  SELECT\r\n    ts,\r\n    status_up,\r\n    CASE\r\n      WHEN (month(ts) = 6 AND day_of_month(ts) >= 20)\r\n        OR (month(ts) = 7)\r\n        OR (month(ts) = 8 AND day_of_month(ts) <= 1)\r\n        OR (month(ts) = 12 AND day_of_month(ts) >= 15)\r\n        OR (month(ts) = 1  AND day_of_month(ts) <= 27)\r\n      THEN 'Férias escolares'\r\n      ELSE 'Período Letivo'\r\n    END AS grupo\r\n  FROM parsed\r\n  WHERE ts IS NOT NULL\r\n)\r\nSELECT\r\n  grupo,\r\n  ROUND(100.0 * SUM(CASE WHEN status_up = 'Cancelado' THEN 1 ELSE 0 END) / COUNT(*), 2)  AS \"Cancelados (%)\",\r\n  ROUND(100.0 * SUM(CASE WHEN status_up <> 'Cancelado' THEN 1 ELSE 0 END) / COUNT(*), 2) AS \"Não cancelados (%)\"\r\nFROM base\r\nGROUP BY grupo\r\nORDER BY CASE grupo WHEN 'Férias escolares' THEN 1 ELSE 2 END;\r\n",
+              "refId": "A"
+            }
+          ],
+          "title": "Percentual de Cancelamento em Período Letivo e nas Férias Escolares",
+          "type": "barchart"
+        },
+        {
+          "datasource": {
+            "type": "grafana-athena-datasource",
+            "uid": "cf2xiw14y0ikgf"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                }
+              },
+              "mappings": []
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Hidratação"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "light-red",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Manicure"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "purple",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Cabelo"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "orange",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "__systemRef": "hideSeriesFrom",
+                "matcher": {
+                  "id": "byNames",
+                  "options": {
+                    "mode": "exclude",
+                    "names": [
+                      "percentual"
+                    ],
+                    "prefix": "All except:",
+                    "readOnly": true
+                  }
+                },
+                "properties": [
+                  {
+                    "id": "custom.hideFrom",
+                    "value": {
+                      "legend": false,
+                      "tooltip": true,
+                      "viz": true
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Pedicure"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "blue",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 9,
+            "w": 6,
+            "x": 12,
+            "y": 21
+          },
+          "id": 22,
+          "options": {
+            "displayLabels": [
+              "name",
+              "percent"
+            ],
+            "legend": {
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "pieType": "donut",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": true
+            },
+            "sort": "desc",
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "12.2.1",
+          "targets": [
+            {
+              "connectionArgs": {
+                "catalog": "__default",
+                "database": "__default",
+                "region": "__default",
+                "resultReuseEnabled": false,
+                "resultReuseMaxAgeInMinutes": 60
+              },
+              "format": 1,
+              "rawSQL": "SELECT\r\n  TRIM(servico) AS servico,\r\n  ROUND(100.0 * COUNT(*) / SUM(COUNT(*)) OVER (), 2) AS percentual\r\nFROM bb_flattened\r\nWHERE feriado = 'Sim'\r\nGROUP BY servico\r\nORDER BY percentual DESC;\r\n",
+              "refId": "A"
+            }
+          ],
+          "title": "Serviços Consultados em Feriados",
+          "type": "piechart"
+        },
+        {
+          "datasource": {
+            "type": "grafana-athena-datasource",
+            "uid": "cf2xiw14y0ikgf"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                }
+              },
+              "mappings": []
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Hidratação"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "light-red",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Manicure"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "purple",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Cabelo"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "orange",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "__systemRef": "hideSeriesFrom",
+                "matcher": {
+                  "id": "byNames",
+                  "options": {
+                    "mode": "exclude",
+                    "names": [
+                      "percentual"
+                    ],
+                    "prefix": "All except:",
+                    "readOnly": true
+                  }
+                },
+                "properties": [
+                  {
+                    "id": "custom.hideFrom",
+                    "value": {
+                      "legend": false,
+                      "tooltip": true,
+                      "viz": true
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Pedicure"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "blue",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 9,
+            "w": 6,
+            "x": 18,
+            "y": 21
+          },
+          "id": 25,
+          "options": {
+            "displayLabels": [
+              "name",
+              "percent"
+            ],
+            "legend": {
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "pieType": "donut",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": true
+            },
+            "sort": "desc",
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "12.2.1",
+          "targets": [
+            {
+              "connectionArgs": {
+                "catalog": "__default",
+                "database": "__default",
+                "region": "__default",
+                "resultReuseEnabled": false,
+                "resultReuseMaxAgeInMinutes": 60
+              },
+              "format": 1,
+              "rawSQL": "SELECT\r\n  TRIM(servico) AS servico,\r\n  ROUND(100.0 * COUNT(*) / SUM(COUNT(*)) OVER (), 2) AS percentual\r\nFROM bb_flattened\r\nWHERE feriado = 'Não'\r\nGROUP BY servico\r\nORDER BY percentual DESC;\r\n",
+              "refId": "A"
+            }
+          ],
+          "title": "Serviços Consultados em Dias Letivos",
+          "type": "piechart"
+        }
+      ],
+      "title": "Feriados",
+      "type": "row"
+    }
+  ],
+  "preload": false,
+  "schemaVersion": 42,
+  "tags": [],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "2024-01-01T00:00:00.000Z",
+    "to": "2025-10-01T00:00:00.000Z"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "Beauty Barreto",
+  "uid": "ad72d68",
+  "version": 35
+}
