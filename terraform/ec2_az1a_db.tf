@@ -2,14 +2,14 @@ resource "aws_instance" "grupo4_ec2_az1a_db" {
   ami = var.ec2_ami
   instance_type = "t2.micro"
   associate_public_ip_address = false
+  private_ip                 = "10.1.0.41"
 
   key_name = aws_key_pair.grupo4_key_db.key_name
 
   subnet_id = aws_subnet.grupo4_subnet_az1a_pri.id
 
   vpc_security_group_ids = [
-    aws_security_group.grupo4_sg_remote.id,
-    aws_security_group.grupo4_sg_mysql.id
+    aws_security_group.grupo4_sg_private.id
   ]
 
   ebs_block_device {
@@ -22,12 +22,19 @@ resource "aws_instance" "grupo4_ec2_az1a_db" {
     }
   }
 
-  user_data = file("/files/shell/ec2_database.sh")
+  user_data = join("\n\n", [
+    "#!/bin/bash",
+    file("${path.module}/files/shell/installing_docker.sh"),
+    templatefile("${path.module}/files/shell/installing_mysql.sh", {
+      arquivo_docker_compose = base64encode(file("${path.module}/files/scripts/compose-mysql.yaml"))
+    })
+  ])
 
   tags = {
     Name = "grupo4-ec2-az1a-db"
   }
 }
+
 resource "aws_ec2_tag" "grupo4_ec2_az1a_db_eni_name" {
   resource_id = aws_instance.grupo4_ec2_az1a_db.primary_network_interface_id
 

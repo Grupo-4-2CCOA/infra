@@ -1,0 +1,13 @@
+services:
+  mysql:
+    image: mysql:latest
+    container_name: mysql-database
+    environment:
+      MYSQL_ROOT_PASSWORD: infra
+      MYSQL_DATABASE: grupo4
+      MYSQL_USER: grupo4-infra-prd
+      MYSQL_PASSWORD: infra
+    volumes:
+      - /var/lib/mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
