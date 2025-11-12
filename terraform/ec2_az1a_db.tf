@@ -22,6 +22,33 @@ resource "aws_instance" "grupo4_ec2_az1a_db" {
     }
   }
 
+  connection {
+    type = "ssh"
+    user = "ubuntu"
+    host = aws_instance.grupo4_ec2_az1a_db.private_ip
+    private_key = tls_private_key.grupo4_key_db.private_key_pem
+    bastion_host = aws_instance.grupo4_ec2_az1a_pub_0.public_ip
+    bastion_user = "ubuntu"
+    bastion_private_key = tls_private_key.grupo4_key_pub.private_key_pem
+  }
+  
+  provisioner "file" {
+    source      = "files/shell/backup_database.sh"
+    destination = "/home/ubuntu/backup.sh"
+  }
+
+  provisioner "file" {
+    source      = "files/shell/cron_job.sh"
+    destination = "/home/ubuntu/cron_job.sh"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "chmod +x /home/ubuntu/backup.sh /home/ubuntu/cron_job.sh",
+      "sh /home/ubuntu/cron_job.sh"
+    ]
+  }
+
   user_data = join("\n\n", [
     "#!/bin/bash",
     file("${path.module}/files/shell/installing_docker.sh"),

@@ -2,7 +2,7 @@ resource "aws_instance" "grupo4_ec2_az1b_pub_0" {
   ami = var.ec2_ami
   instance_type = "t2.micro"
 
-  key_name = "grupo4-key-pub"
+  key_name = aws_key_pair.grupo4_key_pub.key_name
 
   subnet_id = aws_subnet.grupo4_subnet_az1b_pub.id
 
