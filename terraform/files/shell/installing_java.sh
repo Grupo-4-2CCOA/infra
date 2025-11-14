@@ -3,7 +3,9 @@ sudo mkdir /usr/share/api
 sudo chown ubuntu:ubuntu /usr/share/api
 echo "Diretório /usr/share/api criado com sucesso."
 
-echo "${arquivo_docker_compose}" | base64 -d > /home/ubuntu/compose.yaml
+cat <<EOF > /home/ubuntu/compose.yaml
+${arquivo_docker_compose}
+EOF
 
 sudo docker compose -f /home/ubuntu/compose.yaml up -d
 echo "API iniciada com sucesso."

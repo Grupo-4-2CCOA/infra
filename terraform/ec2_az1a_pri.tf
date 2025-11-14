@@ -25,9 +25,16 @@ resource "aws_instance" "grupo4_ec2_az1a_pri_0" {
   user_data = join("\n\n", [
     "#!/bin/bash",
     file("${path.module}/files/shell/installing_docker.sh"),
-    templatefile("${path.module}/files/shell/installing_java.sh", {
-      arquivo_docker_compose = base64encode(file("${path.module}/files/scripts/compose-private.yaml"))
-    })
+    templatefile("${path.module}/files/shell/installing_java.sh",
+      {
+        arquivo_docker_compose = templatefile(
+          "${path.module}/files/scripts/compose-private.yaml",
+          {
+            load_balancer_dns = aws_lb.grupo4_load_balancer.dns_name
+          }
+        )
+      }
+    )
   ])
 
   tags = {

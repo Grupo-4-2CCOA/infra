@@ -1,35 +1,47 @@
 variable alert_email {
     description = "Email para receber alertas do CloudWatch"
-    type        = string
-    default     = "grupo4-2ccoa@sptech.school"
+    type = string
+    default = "grupo4-2ccoa@sptech.school"
 }
 
 variable ec2_ami {
     description = "AMI da EC2"
     type = string
-    default = "ami-0360c520857e3138f"
+    default = "ami-0ecb62995f68bb549"
 }
 
 variable aws_user_id {
     description = "Usuário AWS"
     type = string
-    default = "376339220136"
+    default = "155174118589"
 }
 
 variable elastic_ip_az1a_id {
     description = "ID do IP Elastico da Instancia az1a"
     type = string
-    default = "eipalloc-07e4c772c75184575"
+    default = "eipalloc-054123fd7b4395d15"
 }
 
 variable elastic_ip_az1b_id {
     description = "ID do IP Elastico da Instancia az1b"
     type = string
-    default = "eipalloc-02272522139e48d68"
+    default = "eipalloc-07648e1d1e2f4b12c"
 }
 
 variable elastic_ip_az1c_id {
     description = "ID do IP Elastico da Instancia az1c"
     type = string
-    default = "eipalloc-0e2f3e2ec099d1384"
+    default = "eipalloc-0a20b6897fb8cd116"
+}
+
+variable "public_ip" {
+    description = "IP Público da Instância Bastion"
+    type = string
+    default = "100.29.206.9"
+}
+
+variable "instance_user" {
+    description = "Usuário padrão das instâncias EC2"
+    type = string
+    default = "ubuntu"
 }
