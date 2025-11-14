@@ -33,3 +33,15 @@ variable elastic_ip_az1c_id {
     type = string
     default = "eipalloc-0a20b6897fb8cd116"
 }
+
+variable "public_ip" {
+    description = "IP Público da Instância Bastion"
+    type = string
+    default = "100.29.206.9"
+}
+
+variable "instance_user" {
+    description = "Usuário padrão das instâncias EC2"
+    type = string
+    default = "ubuntu"
+}

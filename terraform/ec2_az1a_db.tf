@@ -2,7 +2,7 @@ resource "aws_instance" "grupo4_ec2_az1a_db" {
   ami = var.ec2_ami
   instance_type = "t2.micro"
   associate_public_ip_address = false
-  private_ip                 = "10.1.0.41"
+  private_ip = "10.1.0.41"
 
   key_name = aws_key_pair.grupo4_key_db.key_name
 
@@ -24,11 +24,11 @@ resource "aws_instance" "grupo4_ec2_az1a_db" {
 
   connection {
     type = "ssh"
-    user = "ubuntu"
+    user = var.instance_user
     host = aws_instance.grupo4_ec2_az1a_db.private_ip
     private_key = tls_private_key.grupo4_key_db.private_key_pem
-    bastion_host = aws_instance.grupo4_ec2_az1a_pub_0.public_ip
-    bastion_user = "ubuntu"
+    bastion_host = var.public_ip
+    bastion_user = var.instance_user
     bastion_private_key = tls_private_key.grupo4_key_pub.private_key_pem
   }
   
