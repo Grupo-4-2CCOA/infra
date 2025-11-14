@@ -7,6 +7,8 @@ services:
       - /usr/share/api:/usr/share/api  
     ports:
       - "8080:8080"
+    environment:
+      - WEB_URL_ENDPOINT=http://${load_balancer_dns}
     depends_on:
       - rabbitmq
       
