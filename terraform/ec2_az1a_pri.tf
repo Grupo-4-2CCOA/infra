@@ -2,7 +2,7 @@ resource "aws_instance" "grupo4_ec2_az1a_pri_0" {
   ami                         = var.ec2_ami
   instance_type               = "t2.micro"
   associate_public_ip_address = false
-  private_ip                 = "10.1.0.36"
+  private_ip                 = "10.1.0.37"
 
   key_name = aws_key_pair.grupo4_key_pri.key_name
 
@@ -30,7 +30,7 @@ resource "aws_instance" "grupo4_ec2_az1a_pri_0" {
         arquivo_docker_compose = templatefile(
           "${path.module}/files/scripts/compose-private.yaml",
           {
-            load_balancer_dns = aws_lb.grupo4_load_balancer.dns_name
+            load_balancer_dns = aws_lb.grupo4_public_load_balancer.dns_name
           }
         )
       }

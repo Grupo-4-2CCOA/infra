@@ -47,11 +47,11 @@ echo "Docker Compose baixado com sucesso..."
 sudo chmod +x /usr/local/bin/docker-compose
 echo "Permissões do Docker Compose ajustadas com sucesso..."
 
-echo "Instalando AWS CLI..."
-curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-sudo apt install -y unzip
-unzip awscliv2.zip
-sudo ./aws/install
+# echo "Instalando AWS CLI..."
+# curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+# sudo apt install -y unzip
+# unzip awscliv2.zip
+# sudo ./aws/install
 
 # Criando link simbólico para o Docker Compose
 sudo ln -sf /usr/local/bin/docker-compose /usr/bin/docker-compose
