@@ -1,8 +1,8 @@
-resource "aws_instance" "grupo4_ec2_az1a_db" {
+resource "aws_instance" "grupo4_ec2_az1a_db_0" {
   ami = var.ec2_ami
-  instance_type = "t2.micro"
+  instance_type = "t2.medium"
   associate_public_ip_address = false
-  private_ip = "10.1.0.41"
+  private_ip = var.private_database_api_ip
 
   key_name = aws_key_pair.grupo4_key_db.key_name
 
@@ -25,7 +25,7 @@ resource "aws_instance" "grupo4_ec2_az1a_db" {
   connection {
     type = "ssh"
     user = var.instance_user
-    host = aws_instance.grupo4_ec2_az1a_db.private_ip
+    host = aws_instance.grupo4_ec2_az1a_db_0.private_ip
     private_key = tls_private_key.grupo4_key_db.private_key_pem
     bastion_host = var.public_ip
     bastion_user = var.instance_user
@@ -58,13 +58,13 @@ resource "aws_instance" "grupo4_ec2_az1a_db" {
   ])
 
   tags = {
-    Name = "grupo4-ec2-az1a-db"
+    Name = "grupo4-ec2-az1a-db-0"
   }
 }
 
 resource "aws_ec2_tag" "grupo4_ec2_az1a_db_eni_name" {
-  resource_id = aws_instance.grupo4_ec2_az1a_db.primary_network_interface_id
+  resource_id = aws_instance.grupo4_ec2_az1a_db_0.primary_network_interface_id
 
   key = "Name"
-  value = "grupo4-eni-ec2-az1a-db"
+  value = "grupo4-eni-ec2-az1a-db-0"
 }

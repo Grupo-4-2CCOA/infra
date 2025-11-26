@@ -15,7 +15,7 @@ resource "aws_security_group" "grupo4_sg_private" {
     protocol = "tcp"
     from_port = 22
     to_port = 22
-    security_groups = [aws_security_group.grupo4_sg_remote.id]
+    cidr_blocks = ["0.0.0.0/0"]
     description     = "SSH 22"
   }
 
@@ -23,7 +23,7 @@ resource "aws_security_group" "grupo4_sg_private" {
     protocol = "tcp"
     from_port = 8080
     to_port = 8080
-    security_groups = [aws_security_group.grupo4_sg_web.id]
+    cidr_blocks = ["0.0.0.0/0"]
     description  = "Spring Boot API 8080 via ALB (mesmo SG)"
   }
 

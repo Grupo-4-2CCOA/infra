@@ -9,7 +9,12 @@ services:
       - "8080:8080"
     environment:
       - WEB_URL_ENDPOINT=http://${load_balancer_dns}
+      - CREDENTIALS_FILE_PATH=file:/usr/share/api/credentials.json
+      - DATABASE_IP=${database_ip}
+    networks:
+      - app-net
     depends_on:
+      - redisinsight
       - rabbitmq
       
   rabbitmq:
@@ -20,3 +25,36 @@ services:
     ports:
       - '5672:5672'
       - '15672:15672'
+    networks:
+      - app-net
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    command: [ "redis-server", "--save", "60", "1", "--loglevel", "warning" ]
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - app-net
+
+  redisinsight:
+    image: redis/redisinsight:latest
+    container_name: redisinsight
+    ports:
+      - "5540:5540"
+    depends_on:
+      - redis
+    networks:
+      - app-net
+    volumes:
+      - redisinsight_data:/data
+
+networks:
+  app-net:
+    driver: bridge
+
+volumes:
+  redis_data:
+  redisinsight_data:

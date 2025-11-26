@@ -29,7 +29,7 @@ resource "aws_cloudwatch_dashboard" "grupo4_ec2_dashboard" {
 
         properties = {
           metrics = [
-            ["AWS/EC2", "CPUUtilization", "InstanceId", aws_instance.grupo4_ec2_az1a_db.id],
+            ["AWS/EC2", "CPUUtilization", "InstanceId", aws_instance.grupo4_ec2_az1a_db_0.id],
             ["AWS/EC2", "CPUUtilization", "InstanceId", aws_instance.grupo4_ec2_az1a_pri_0.id],
             ["AWS/EC2", "CPUUtilization", "InstanceId", aws_instance.grupo4_ec2_az1a_pub_0.id],
             ["AWS/EC2", "CPUUtilization", "InstanceId", aws_instance.grupo4_ec2_az1b_pub_0.id]
@@ -50,7 +50,7 @@ resource "aws_cloudwatch_dashboard" "grupo4_ec2_dashboard" {
 
         properties = {
           metrics = [
-            ["CWAgent", "mem_used_percent", "InstanceId", aws_instance.grupo4_ec2_az1a_db.id],
+            ["CWAgent", "mem_used_percent", "InstanceId", aws_instance.grupo4_ec2_az1a_db_0.id],
             ["CWAgent", "mem_used_percent", "InstanceId", aws_instance.grupo4_ec2_az1a_pri_0.id],
             ["CWAgent", "mem_used_percent", "InstanceId", aws_instance.grupo4_ec2_az1a_pub_0.id],
             ["CWAgent", "mem_used_percent", "InstanceId", aws_instance.grupo4_ec2_az1b_pub_0.id]
@@ -71,7 +71,7 @@ resource "aws_cloudwatch_dashboard" "grupo4_ec2_dashboard" {
 
         properties = {
           metrics = [
-            ["CWAgent", "disk_used_percent", "InstanceId", aws_instance.grupo4_ec2_az1a_db.id, "device", "/dev/sda1", "fstype", "ext4"],
+            ["CWAgent", "disk_used_percent", "InstanceId", aws_instance.grupo4_ec2_az1a_db_0.id, "device", "/dev/sda1", "fstype", "ext4"],
             ["CWAgent", "disk_used_percent", "InstanceId", aws_instance.grupo4_ec2_az1a_pri_0.id, "device", "/dev/sda1", "fstype", "ext4"],
             ["CWAgent", "disk_used_percent", "InstanceId", aws_instance.grupo4_ec2_az1a_pub_0.id, "device", "/dev/sda1", "fstype", "ext4"],
             ["CWAgent", "disk_used_percent", "InstanceId", aws_instance.grupo4_ec2_az1b_pub_0.id, "device", "/dev/sda1", "fstype", "ext4"]

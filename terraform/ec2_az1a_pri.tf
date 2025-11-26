@@ -1,8 +1,8 @@
 resource "aws_instance" "grupo4_ec2_az1a_pri_0" {
-  ami                         = var.ec2_ami
-  instance_type               = "t2.micro"
+  ami = var.ec2_ami
+  instance_type = "t2.medium"
   associate_public_ip_address = false
-  private_ip                 = "10.1.0.37"
+  private_ip = var.private_rest_api_ip
 
   key_name = aws_key_pair.grupo4_key_pri.key_name
 
@@ -15,7 +15,7 @@ resource "aws_instance" "grupo4_ec2_az1a_pri_0" {
   ebs_block_device {
     device_name = "/dev/sda1"
     volume_type = "gp3"
-    volume_size = 8
+    volume_size = 24
 
     tags = {
       Name = "grupo4-ebs-default-ec2-az1a-pri-0"
@@ -31,6 +31,7 @@ resource "aws_instance" "grupo4_ec2_az1a_pri_0" {
           "${path.module}/files/scripts/compose-private.yaml",
           {
             load_balancer_dns = aws_lb.grupo4_public_load_balancer.dns_name
+            database_ip = var.private_database_api_ip
           }
         )
       }
@@ -47,4 +48,12 @@ resource "aws_ec2_tag" "grupo4_ec2_az1a_pri_0_eni_name" {
 
   key   = "Name"
   value = "grupo4-eni-ec2-az1a-pri-0"
+}
+
+resource "aws_ec2_instance_connect_endpoint" "grupo4_private_ec2_connect" {
+  subnet_id = aws_subnet.grupo4_subnet_az1a_pri.id
+  security_group_ids = [aws_security_group.grupo4_sg_private.id]
+  tags = {
+    Name = "grupo4-private-ec2-connect-endpoint"
+  }
 }
