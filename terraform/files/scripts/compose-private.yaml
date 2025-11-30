@@ -1,7 +1,7 @@
 services:
-  api:
+  spring:
     image: amazoncorretto:21 
-    container_name: api-spring 
+    container_name: spring 
     command: sh -c "mkdir -p /usr/share/api && java -jar /usr/share/api/beauty_barreto.jar --spring.profiles.active=prod"
     volumes:
       - /usr/share/api:/usr/share/api  
@@ -19,6 +19,7 @@ services:
       
   rabbitmq:
     image: 'rabbitmq:3.13-management'
+    container_name: rabbitmq
     environment:
       - 'RABBITMQ_DEFAULT_PASS=secret'
       - 'RABBITMQ_DEFAULT_USER=myuser'
@@ -27,6 +28,30 @@ services:
       - '15672:15672'
     networks:
       - app-net
+
+  consumer:
+    image: 'python:3.12-slim'
+    container_name: consumer
+    volumes:
+      - /usr/share/consumer/:/usr/share/consumer/
+    command: >
+      sh -c "apt-get update && pip install -r /usr/share/consumer/requirements.txt && python /usr/share/consumer/consumer.py"
+    environment:
+      - RABBITMQ_URL=amqp://myuser:secret@rabbitmq:5672/
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_USER=myuser
+      - RABBITMQ_PASSWORD=secret
+      
+      - GMAIL_PASSWORD=$${GMAIL_PASSWORD}
+
+      - DB_HOST=${database_ip}
+      - DB_USER=root
+      - DB_PASSWORD=infra
+      - DB_NAME=grupo4
+    networks:
+      - app-net
+    depends_on:
+      - rabbitmq
 
   redis:
     image: redis:7-alpine
