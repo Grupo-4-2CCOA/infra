@@ -13,31 +13,43 @@ variable ec2_ami {
 variable aws_user_id {
     description = "Usuário AWS"
     type = string
-    default = "155174118589"
+    default = "681805092907"
 }
 
 variable elastic_ip_az1a_id {
-    description = "ID do IP Elastico da Instancia az1a"
+    description = "ID do IP Elastico da Instancia az1a Web"
     type = string
-    default = "eipalloc-054123fd7b4395d15"
+    default = "eipalloc-0ea49d920f45600d3"
 }
 
 variable elastic_ip_az1b_id {
-    description = "ID do IP Elastico da Instancia az1b"
+    description = "ID do IP Elastico da Instancia az1b Web"
     type = string
-    default = "eipalloc-07648e1d1e2f4b12c"
+    default = "eipalloc-073ab38370484e86f"
 }
 
 variable elastic_ip_az1c_id {
-    description = "ID do IP Elastico da Instancia az1c"
+    description = "ID do IP Elastico da Instancia az1c Grafana"
     type = string
-    default = "eipalloc-0a20b6897fb8cd116"
+    default = "eipalloc-04dadaad571a36306"
 }
 
 variable "public_ip" {
-    description = "IP Público da Instância Bastion"
+    description = "IP Público da Instância Pública AZ1A"
     type = string
-    default = "100.29.206.9"
+    default = "3.225.148.41"
+}
+
+variable "private_rest_api_ip" {
+    description = "IP Privado da Instância SpringBoot & RabbitMQ"
+    type = string
+    default = "10.1.0.37"
+}
+
+variable "private_database_api_ip" {
+    description = "IP Privado da Instância do Banco de Dados"
+    type = string
+    default = "10.1.0.41"
 }
 
 variable "instance_user" {

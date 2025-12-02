@@ -19,7 +19,7 @@ resource "aws_network_acl" "grupo4_acl_pri" {
     protocol   = "tcp"
     from_port  = 22
     to_port    = 22
-    cidr_block = "10.1.0.0/16"
+    cidr_block = "10.1.0.0/26"
     action     = "allow"
   }
 
@@ -28,7 +28,16 @@ resource "aws_network_acl" "grupo4_acl_pri" {
     protocol   = "tcp"
     from_port  = 3306
     to_port    = 3306
-    cidr_block = "10.1.0.0/16"
+    cidr_block = "10.1.0.0/26"
+    action     = "allow"
+  }
+
+  ingress {
+    rule_no    = 130
+    protocol   = "tcp"
+    from_port  = 8080
+    to_port    = 8080
+    cidr_block = "10.1.0.0/26"
     action     = "allow"
   }
 
@@ -52,9 +61,9 @@ resource "aws_network_acl" "grupo4_acl_pri" {
   
   egress {
     rule_no    = 120
-    protocol   = "tcp"
-    from_port  = 1024
-    to_port    = 65535
+    protocol   = "-1"
+    from_port  = 0
+    to_port    = 0
     cidr_block = "0.0.0.0/0"
     action     = "allow"
   }

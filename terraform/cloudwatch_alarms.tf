@@ -17,7 +17,7 @@ resource "aws_cloudwatch_metric_alarm" "grupo4_ec2_db_cpu_high" {
   alarm_actions       = [aws_sns_topic.grupo4_cloudwatch_alerts.arn]
 
   dimensions = {
-    InstanceId = aws_instance.grupo4_ec2_az1a_db.id
+    InstanceId = aws_instance.grupo4_ec2_az1a_db_0.id
   }
 
   tags = {
@@ -101,7 +101,7 @@ resource "aws_cloudwatch_metric_alarm" "grupo4_ec2_db_memory_high" {
   alarm_actions       = [aws_sns_topic.grupo4_cloudwatch_alerts.arn]
 
   dimensions = {
-    InstanceId = aws_instance.grupo4_ec2_az1a_db.id
+    InstanceId = aws_instance.grupo4_ec2_az1a_db_0.id
   }
 
   tags = {
@@ -185,7 +185,7 @@ resource "aws_cloudwatch_metric_alarm" "grupo4_ec2_db_disk_high" {
   alarm_actions       = [aws_sns_topic.grupo4_cloudwatch_alerts.arn]
 
   dimensions = {
-    InstanceId = aws_instance.grupo4_ec2_az1a_db.id
+    InstanceId = aws_instance.grupo4_ec2_az1a_db_0.id
     device     = "/dev/sda1"
     fstype     = "ext4"
   }
