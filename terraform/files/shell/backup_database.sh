@@ -14,6 +14,7 @@ S3_BUCKET="beauty-barreto-backup"
 S3_PREFIX="database"
 
 sudo mkdir -p "$BACKUP_DIR"
+sudo chown ubuntu:ubuntu "$BACKUP_DIR"
 
 DATE=$(date +"%Y-%m-%d_%H-%M-%S")
 FILENAME="${DB_NAME}_${DATE}.sql.gz"
@@ -36,7 +37,7 @@ sudo docker exec "$CONTAINER_NAME" sh -c "
     '${DB_NAME}'
 " | gzip > "$FILEPATH"
 
-if [[ -s "$FILEPATH" ]]; then
+if [ -s "$FILEPATH" ]; then
   echo "[$(date)] [SUCESSO] Backup gerado em: $FILEPATH"
 else
   echo "[$(date)] [ERRO] Arquivo de backup está vazio!" >&2
@@ -44,6 +45,6 @@ else
 fi
 
 echo "[$(date)] Enviando backup para o bucket S3: $S3_URI ..."
-sudo aws s3 cp "$FILEPATH" "$S3_URI" --region "$AWS_REGION"
+sudo aws s3 cp "$FILEPATH" "$S3_URI" --region "$AWS_REGION" --no-sign-request
 
 echo "[$(date)] [SUCESSO] Backup enviado para $S3_URI"
