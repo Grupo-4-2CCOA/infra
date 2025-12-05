@@ -37,15 +37,10 @@ resource "aws_instance" "grupo4_ec2_az1a_db_0" {
     destination = "/home/ubuntu/backup.sh"
   }
 
-  provisioner "file" {
-    source      = "files/shell/cron_job.sh"
-    destination = "/home/ubuntu/cron_job.sh"
-  }
-
   provisioner "remote-exec" {
     inline = [
-      "chmod +x /home/ubuntu/backup.sh /home/ubuntu/cron_job.sh",
-      "sh /home/ubuntu/cron_job.sh"
+      "chmod +x /home/ubuntu/backup.sh",
+      "(crontab -l 2>/dev/null; echo \"0 15 * * * sh /home/ubuntu/backup.sh > /home/ubuntu/backup_cron.log 2>&1\") | crontab -"
     ]
   }
 
