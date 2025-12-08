@@ -51,6 +51,14 @@ resource "aws_security_group" "grupo4_sg_private" {
     description = "RabbitMQ Management UI 15672"
   }
 
+  ingress {
+    protocol = "tcp"
+    from_port = 5540
+    to_port = 5540
+    cidr_blocks = ["0.0.0.0/0"]
+    description  = "Redis 5540 via ALB"
+  }
+
   egress {
     protocol = "-1"
     from_port = 0
