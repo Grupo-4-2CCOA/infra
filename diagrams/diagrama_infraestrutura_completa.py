@@ -12,6 +12,7 @@ from diagrams.onprem.database import Mysql
 from diagrams.onprem.inmemory import Redis
 from diagrams.onprem.queue import Rabbitmq
 from diagrams.onprem.monitoring import Grafana
+from diagrams.onprem.container import Docker
 from diagrams.programming.framework import Spring
 
 diagram_font_style = {
@@ -71,43 +72,65 @@ with Diagram("Infraestrutura - Beauty Barreto", show=False, node_attr=node_font_
           with Cluster("Servidor Frontend (az1a_pub)", graph_attr=cluster_font_style):
             ec2_az1a_pub = EC2("EC2")
             ebs_az1a_pub = EBS("EBS")
-            react_az1a = React("React")
             sg_az1a_pub = Custom("Grupo de Segurança", "assets/securityGroup.png")
+            with Cluster("Docker", graph_attr=cluster_font_style):
+              docker_react_1a = Docker("Container")
+              react_az1a = React("React")
+              docker_react_1a >> Edge() << react_az1a
             
             ebs_az1a_pub >> Edge() << ec2_az1a_pub
-            ec2_az1a_pub >> Edge() << react_az1a
+            ec2_az1a_pub >> Edge() << docker_react_1a
             sg_az1a_pub >> Edge() << ec2_az1a_pub
         
         with Cluster("Subnet Privada 1a", graph_attr=cluster_font_style):
           with Cluster("Servidor Backend (az1a_pri)", graph_attr=cluster_font_style):
             ec2_az1a_pri = EC2("EC2")
             ebs_az1a_pri = EBS("EBS")
-            java_backend = Java("Java")
-            if Spring:
-              springboot = Spring("SpringBoot")
-            else:
-              springboot = Custom("SpringBoot", "springboot.png")
-            rabbitmq = Rabbitmq("RabbitMQ")
-            redis = Redis("Redis")
-            consumer = Python("Consumer")
             sg_az1a_pri = Custom("Grupo de Segurança", "assets/securityGroup.png")
             
+            with Cluster("Docker Compose", graph_attr=cluster_font_style):
+              with Cluster("Container Java", graph_attr=cluster_font_style):
+                docker_spring = Docker("Container")
+                java_backend = Java("Java")
+                springboot = Spring("SpringBoot")
+                docker_spring >> Edge() << java_backend
+                java_backend >> Edge() << springboot
+              
+              with Cluster("Container RabbitMQ", graph_attr=cluster_font_style):
+                docker_rabbit = Docker("Container")
+                rabbitmq = Rabbitmq("RabbitMQ")
+                docker_rabbit >> Edge() << rabbitmq
+              
+              with Cluster("Container Redis", graph_attr=cluster_font_style):
+                docker_redis = Docker("Container")
+                redis = Redis("Redis")
+                docker_redis >> Edge() << redis
+              
+              with Cluster("Container Consumer", graph_attr=cluster_font_style):
+                docker_consumer = Docker("Container")
+                consumer = Python("Consumer")
+                docker_consumer >> Edge() << consumer
+              
+              springboot >> Edge() << rabbitmq
+              springboot >> Edge() << redis
+              rabbitmq >> Edge() << consumer
+            
             ebs_az1a_pri >> Edge() << ec2_az1a_pri
-            ec2_az1a_pri >> Edge() << java_backend
-            java_backend >> Edge() << springboot
-            springboot >> Edge() << rabbitmq
-            springboot >> Edge() << redis
-            rabbitmq >> Edge() << consumer
+            ec2_az1a_pri >> Edge() << docker_spring
             sg_az1a_pri >> Edge() << ec2_az1a_pri
           
           with Cluster("Servidor de Banco de Dados (az1a_db)", graph_attr=cluster_font_style):
             ec2_az1a_db = EC2("EC2")
             ebs_az1a_db = EBS("EBS")
-            mysql = Mysql("MySQL")
             sg_az1a_db = Custom("Grupo de Segurança", "assets/securityGroup.png")
             
+            with Cluster("Docker", graph_attr=cluster_font_style):
+              docker_mysql = Docker("Container")
+              mysql = Mysql("MySQL")
+              docker_mysql >> Edge() << mysql
+            
             ebs_az1a_db >> Edge() << ec2_az1a_db
-            ec2_az1a_db >> Edge() << mysql
+            ec2_az1a_db >> Edge() << docker_mysql
             sg_az1a_db >> Edge() << ec2_az1a_db
           
           # Consumer conecta ao MySQL
@@ -118,11 +141,14 @@ with Diagram("Infraestrutura - Beauty Barreto", show=False, node_attr=node_font_
           with Cluster("Servidor Frontend (az1b_pub)", graph_attr=cluster_font_style):
             ec2_az1b_pub = EC2("EC2")
             ebs_az1b_pub = EBS("EBS")
-            react_az1b = React("React")
             sg_az1b_pub = Custom("Grupo de Segurança", "assets/securityGroup.png")
+            with Cluster("Docker", graph_attr=cluster_font_style):
+              docker_react_1b = Docker("Container")
+              react_az1b = React("React")
+              docker_react_1b >> Edge() << react_az1b
             
             ebs_az1b_pub >> Edge() << ec2_az1b_pub
-            ec2_az1b_pub >> Edge() << react_az1b
+            ec2_az1b_pub >> Edge() << docker_react_1b
             sg_az1b_pub >> Edge() << ec2_az1b_pub
       
       with Cluster("Zona de Disponibilidade 1c", graph_attr=cluster_font_style):

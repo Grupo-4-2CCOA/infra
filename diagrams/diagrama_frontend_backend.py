@@ -9,6 +9,7 @@ from diagrams.programming.language import Python
 from diagrams.onprem.database import Mysql
 from diagrams.onprem.inmemory import Redis
 from diagrams.onprem.queue import Rabbitmq
+from diagrams.onprem.container import Docker
 
 diagram_font_style = {
   "labelloc": "t",
@@ -48,30 +49,56 @@ with Diagram("Aplicação - Beauty Barreto", show=False, node_attr=node_font_sty
       with Cluster("Subnets Públicas (Frontend)", graph_attr=cluster_font_style):
         with Cluster("AZ 1a", graph_attr=cluster_font_style):
           ec2_frontend_1a = EC2("EC2")
-          react_1a = React("React")
-          ec2_frontend_1a >> Edge() << react_1a
+          with Cluster("Docker", graph_attr=cluster_font_style):
+            docker_react_1a = Docker("Container")
+            react_1a = React("React")
+            docker_react_1a >> Edge() << react_1a
+          ec2_frontend_1a >> Edge() << docker_react_1a
         
         with Cluster("AZ 1b", graph_attr=cluster_font_style):
           ec2_frontend_1b = EC2("EC2")
-          react_1b = React("React")
-          ec2_frontend_1b >> Edge() << react_1b
+          with Cluster("Docker", graph_attr=cluster_font_style):
+            docker_react_1b = Docker("Container")
+            react_1b = React("React")
+            docker_react_1b >> Edge() << react_1b
+          ec2_frontend_1b >> Edge() << docker_react_1b
       
       with Cluster("Subnet Privada (Backend)", graph_attr=cluster_font_style):
         ec2_backend = EC2("EC2")
-        springboot = Spring("SpringBoot")
-        rabbitmq = Rabbitmq("RabbitMQ")
-        redis = Redis("Redis")
-        consumer = Python("Consumer")
+        with Cluster("Docker Compose", graph_attr=cluster_font_style):
+          with Cluster("Container Java", graph_attr=cluster_font_style):
+            docker_spring = Docker("Container")
+            springboot = Spring("SpringBoot")
+            docker_spring >> Edge() << springboot
+          
+          with Cluster("Container RabbitMQ", graph_attr=cluster_font_style):
+            docker_rabbit = Docker("Container")
+            rabbitmq = Rabbitmq("RabbitMQ")
+            docker_rabbit >> Edge() << rabbitmq
+          
+          with Cluster("Container Redis", graph_attr=cluster_font_style):
+            docker_redis = Docker("Container")
+            redis = Redis("Redis")
+            docker_redis >> Edge() << redis
+          
+          with Cluster("Container Consumer", graph_attr=cluster_font_style):
+            docker_consumer = Docker("Container")
+            consumer = Python("Consumer")
+            docker_consumer >> Edge() << consumer
+          
+          springboot >> Edge() << rabbitmq
+          springboot >> Edge() << redis
+          rabbitmq >> Edge() << consumer
         
-        ec2_backend >> Edge() << springboot
-        springboot >> Edge() << rabbitmq
-        springboot >> Edge() << redis
-        rabbitmq >> Edge() << consumer
+        ec2_backend >> Edge() << docker_spring
       
       with Cluster("Subnet Privada (Database)", graph_attr=cluster_font_style):
         ec2_db = EC2("EC2")
-        mysql = Mysql("MySQL")
-        ec2_db >> Edge() << mysql
+        with Cluster("Docker", graph_attr=cluster_font_style):
+          docker_mysql = Docker("Container")
+          mysql = Mysql("MySQL")
+          docker_mysql >> Edge() << mysql
+        ec2_db >> Edge() << docker_mysql
       
       consumer >> Edge() << mysql
   
