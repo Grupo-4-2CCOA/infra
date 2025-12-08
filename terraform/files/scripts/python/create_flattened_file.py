@@ -3,7 +3,7 @@ import pandas as pd
 from io import StringIO
 
 s3 = boto3.client("s3", region_name="us-east-1")
-BUCKET = "beauty-barreto-trusted"
+BUCKET = "grupo4-beauty-barreto-trusted"
 
 FILES = [
     "treated_weather_data.csv",
@@ -57,7 +57,7 @@ def lambda_handler(event, context):
         csv_buffer = StringIO()
         df_final.to_csv(csv_buffer, index=False)
         s3.put_object(
-            Bucket="beauty-barreto-client",
+            Bucket="grupo4-beauty-barreto-client",
             Key=OUTPUT_KEY,
             Body=csv_buffer.getvalue(),
             ContentType="text/csv"

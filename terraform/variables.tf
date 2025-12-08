@@ -13,31 +13,31 @@ variable ec2_ami {
 variable aws_user_id {
     description = "Usuário AWS"
     type = string
-    default = "681805092907"
+    default = "229245958983"
 }
 
 variable elastic_ip_az1a_id {
     description = "ID do IP Elastico da Instancia az1a Web"
     type = string
-    default = "eipalloc-0ea49d920f45600d3"
+    default = "eipalloc-0faa3662e7a486915"
 }
 
 variable elastic_ip_az1b_id {
     description = "ID do IP Elastico da Instancia az1b Web"
     type = string
-    default = "eipalloc-073ab38370484e86f"
+    default = "eipalloc-03a6255bb45ee4a44"
 }
 
 variable elastic_ip_az1c_id {
     description = "ID do IP Elastico da Instancia az1c Grafana"
     type = string
-    default = "eipalloc-04dadaad571a36306"
+    default = "eipalloc-0f84bff456286b404"
 }
 
 variable "public_ip" {
     description = "IP Público da Instância Pública AZ1A"
     type = string
-    default = "3.225.148.41"
+    default = "100.30.131.174"
 }
 
 variable "private_rest_api_ip" {

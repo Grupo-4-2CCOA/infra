@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "grupo4_s3_backup" {
-  bucket = "beauty-barreto-backup"
+  bucket = "grupo4-beauty-barreto-backup"
   force_destroy = true
 }
 

@@ -36,13 +36,13 @@ services:
       - /usr/share/consumer/:/usr/share/consumer/
     command: >
       sh -c "apt-get update && pip install -r /usr/share/consumer/requirements.txt && python /usr/share/consumer/consumer.py"
+    env_file:
+      - /home/ubuntu/.env
     environment:
       - RABBITMQ_URL=amqp://myuser:secret@rabbitmq:5672/
       - RABBITMQ_HOST=rabbitmq
       - RABBITMQ_USER=myuser
       - RABBITMQ_PASSWORD=secret
-      
-      - GMAIL_PASSWORD=$${GMAIL_PASSWORD}
 
       - DB_HOST=${database_ip}
       - DB_USER=root

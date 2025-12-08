@@ -5,8 +5,8 @@ import unicodedata
 
 s3 = boto3.client("s3", region_name="us-east-1")
 
-TRUSTED_BUCKET = "beauty-barreto-trusted"
-RAW_BUCKET = "beauty-barreto-raw"
+TRUSTED_BUCKET = "grupo4-beauty-barreto-trusted"
+RAW_BUCKET = "grupo4-beauty-barreto-raw"
 KEY = "weathers/weather_data.csv"
 OUT_KEY = "treated_weather_data.csv"
 

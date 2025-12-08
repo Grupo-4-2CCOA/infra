@@ -4,12 +4,12 @@ from io import StringIO
 
 s3 = boto3.client("s3", region_name="us-east-1")
 
-TRUSTED_BUCKET = "beauty-barreto-trusted"
+TRUSTED_BUCKET = "grupo4-beauty-barreto-trusted"
 KEY = "schedules/schedule_data.csv"
 
 def lambda_handler(event, context):
     try:
-        obj = s3.get_object(Bucket="beauty-barreto-raw", Key=KEY)
+        obj = s3.get_object(Bucket="grupo4-beauty-barreto-raw", Key=KEY)
         csv_data = obj["Body"].read().decode("utf-8")
         print("Arquivo lido com sucesso do S3.")
 

@@ -10,7 +10,7 @@ DB_NAME="grupo4"
 BACKUP_DIR="/mysql_backups"
 
 AWS_REGION="us-east-1"
-S3_BUCKET="beauty-barreto-backup"
+S3_BUCKET="grupo4-beauty-barreto-backup"
 S3_PREFIX="database"
 
 sudo mkdir -p "$BACKUP_DIR"

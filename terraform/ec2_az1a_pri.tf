@@ -49,11 +49,3 @@ resource "aws_ec2_tag" "grupo4_ec2_az1a_pri_0_eni_name" {
   key   = "Name"
   value = "grupo4-eni-ec2-az1a-pri-0"
 }
-
-resource "aws_ec2_instance_connect_endpoint" "grupo4_private_ec2_connect" {
-  subnet_id = aws_subnet.grupo4_subnet_az1a_pri.id
-  security_group_ids = [aws_security_group.grupo4_sg_private.id]
-  tags = {
-    Name = "grupo4-private-ec2-connect-endpoint"
-  }
-}
